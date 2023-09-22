@@ -18,7 +18,7 @@ class Cliente extends Model
         'nombre2',
         'apellido1',
         'apellido2',
-        'aplica_covertura',
+        'aplica_cobertura',
         'fec_nac',
         'direccion',
         'codigopostal',

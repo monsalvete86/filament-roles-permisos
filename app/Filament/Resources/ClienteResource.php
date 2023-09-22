@@ -14,7 +14,7 @@ use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ClienteResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\ClienteResource\RelationManagers;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class ClienteResource extends Resource
 {
@@ -47,7 +47,7 @@ class ClienteResource extends Resource
                         Forms\Components\TextInput::make('apellido2')
                             ->maxValue(50)
                             ->required(),
-                        Forms\Components\Radio::make('aplica_covertura')
+                        Forms\Components\Radio::make('aplica_cobertura')
                             ->required()
                             ->boolean()
                             ->columns(2),
@@ -117,7 +117,7 @@ class ClienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('apellido2')
                     ->searchable(),
-                TextColumn::make('aplica_covertura')
+                TextColumn::make('aplica_cobertura')
                     ->searchable(),
                 TextColumn::make('fec_nac')
                     ->searchable(),
@@ -158,7 +158,7 @@ class ClienteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

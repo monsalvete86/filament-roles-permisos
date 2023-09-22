@@ -30,7 +30,7 @@ class DependienteResource extends Resource
                         Forms\Components\TextInput::make('dependiente1')
                             ->maxValue(50)
                             ->required(),
-                        Forms\Components\Radio::make('aplica_covertura1')
+                        Forms\Components\Radio::make('aplica_cobertura1')
                             ->required()
                             ->boolean()
                             ->columns(2),
@@ -41,7 +41,7 @@ class DependienteResource extends Resource
                             ->native(false),
                         Forms\Components\TextInput::make('dependiente2')
                             ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_covertura2')
+                        Forms\Components\Radio::make('aplica_cobertura2')
                             ->boolean()
                             ->columns(2),
                         Forms\Components\TextInput::make('estado_migratorio2')
@@ -51,7 +51,7 @@ class DependienteResource extends Resource
                             ->native(false),
                         Forms\Components\TextInput::make('dependiente3')
                             ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_covertura3')
+                        Forms\Components\Radio::make('aplica_cobertura3')
                             ->boolean()
                             ->columns(2),
                         Forms\Components\TextInput::make('estado_migratorio3')
@@ -61,7 +61,7 @@ class DependienteResource extends Resource
                             ->native(false),
                         Forms\Components\TextInput::make('dependiente4')
                             ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_covertura4')
+                        Forms\Components\Radio::make('aplica_cobertura4')
                             ->boolean()
                             ->columns(2),
                         Forms\Components\TextInput::make('estado_migratorio4')
@@ -71,7 +71,7 @@ class DependienteResource extends Resource
                             ->native(false),
                         Forms\Components\TextInput::make('dependiente_x')
                             ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_covertura_x')
+                        Forms\Components\Radio::make('aplica_cobertura_x')
                             ->boolean()
                             ->columns(2),
                         Forms\Components\TextInput::make('estado_migratorio_x')
@@ -90,7 +90,7 @@ class DependienteResource extends Resource
                 TextColumn::make('id'),
                 TextColumn::make('dependiente1')
                     ->searchable(),
-                TextColumn::make('aplica_covertura1')
+                TextColumn::make('aplica_cobertura1')
                     ->searchable(),
                 TextColumn::make('estado_migratorio1')
                     ->searchable(),
@@ -98,7 +98,7 @@ class DependienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('dependiente2')
                     ->searchable(),
-                TextColumn::make('aplica_covertura2')
+                TextColumn::make('aplica_cobertura2')
                     ->searchable(),
                 TextColumn::make('estado_migratorio2')
                     ->searchable(),
@@ -106,7 +106,7 @@ class DependienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('dependiente3')
                     ->searchable(),
-                TextColumn::make('aplica_covertura3')
+                TextColumn::make('aplica_cobertura3')
                     ->searchable(),
                 TextColumn::make('estado_migratorio3')
                     ->searchable(),
@@ -114,7 +114,7 @@ class DependienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('dependiente4')
                     ->searchable(),
-                TextColumn::make('aplica_covertura4')
+                TextColumn::make('aplica_cobertura4')
                     ->searchable(),
                 TextColumn::make('estado_migratorio4')
                     ->searchable(),
@@ -122,7 +122,7 @@ class DependienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('dependiente_x')
                     ->searchable(),
-                TextColumn::make('aplica_covertura_x')
+                TextColumn::make('aplica_cobertura_x')
                     ->searchable(),
                 TextColumn::make('estado_migratorio_x')
                     ->searchable(),

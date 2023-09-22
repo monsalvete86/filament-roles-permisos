@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nombre2')->nullable();
             $table->string('apellido1');
             $table->string('apellido2')->nullable();
-            $table->boolean('aplica_covertura')->default(true);
+            $table->boolean('aplica_cobertura')->default(true);
             $table->date('fec_nac');
             $table->string('direccion');
             $table->string('codigopostal');
