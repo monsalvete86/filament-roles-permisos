@@ -14,6 +14,7 @@ use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ClienteResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ClienteResource\RelationManagers;
 use Filament\Resources\RelationManagers\RelationManager;
 
 class ClienteResource extends Resource
@@ -137,6 +138,54 @@ class ClienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('personas_aseguradas')
                     ->searchable(),
+                TextColumn::make('estado_civil_conyugue')
+                    ->searchable(),
+                TextColumn::make('nombre_conyugue')
+                    ->searchable(),
+                TextColumn::make('aplica_covertura_conyugue')
+                    ->searchable(),
+                TextColumn::make('dependientes_fuera_pareja')
+                    ->searchable(),
+                TextColumn::make('quien_aporta_ingresos')
+                    ->searchable(),
+                TextColumn::make('quien_declara_taxes')
+                    ->searchable(),
+                TextColumn::make('total_ingresos_gf')
+                    ->searchable(),
+                TextColumn::make('estado_cliente')
+                    ->searchable(),
+                /* TextColumn::make('digitadora_id')
+                    ->searchable(), */
+                TextColumn::make('fecha_digitadora')
+                    ->searchable(),
+                /* TextColumn::make('benefit_id')
+                    ->searchable(), */
+                TextColumn::make('fecha_benefit')
+                    ->searchable(),
+                /* TextColumn::make('procesador_id')
+                    ->searchable(),*/
+                TextColumn::make('cobertura_ant')
+                    ->searchable(),
+                TextColumn::make('codigo_anterior')
+                    ->searchable(),
+                TextColumn::make('ultimo_agente')
+                    ->searchable(),
+                TextColumn::make('fecha_retiro')
+                    ->searchable(),
+                TextColumn::make('agente')
+                    ->searchable(),
+                TextColumn::make('inicio_cobertura')
+                    ->searchable(),
+                TextColumn::make('fin_cobertura')
+                    ->searchable(),
+                TextColumn::make('imagen')
+                    ->searchable(),
+                TextColumn::make('nota_benefit')
+                    ->searchable(),
+                TextColumn::make('nota_procesador')
+                    ->searchable(),
+                TextColumn::make('nota_digitadora')
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -158,7 +207,7 @@ class ClienteResource extends Resource
     public static function getRelations(): array
     {
         return [
-
+            //
         ];
     }
 

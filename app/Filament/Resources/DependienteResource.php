@@ -27,57 +27,19 @@ class DependienteResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                        Forms\Components\TextInput::make('dependiente1')
+                        Forms\Components\TextInput::make('nombre')
                             ->maxValue(50)
                             ->required(),
-                        Forms\Components\Radio::make('aplica_cobertura1')
+                        Forms\Components\Radio::make('aplica_cobertura')
                             ->required()
                             ->boolean()
                             ->columns(2),
-                        Forms\Components\TextInput::make('estado_migratorio1')
-                            ->minLength(2)
-                            ->maxLength(255),
-                        Forms\Components\DatePicker::make('fec_nac1')
-                            ->native(false),
-                        Forms\Components\TextInput::make('dependiente2')
-                            ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_cobertura2')
-                            ->boolean()
-                            ->columns(2),
-                        Forms\Components\TextInput::make('estado_migratorio2')
-                            ->minLength(2)
-                            ->maxLength(255),
-                        Forms\Components\DatePicker::make('fec_nac2')
-                            ->native(false),
-                        Forms\Components\TextInput::make('dependiente3')
-                            ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_cobertura3')
-                            ->boolean()
-                            ->columns(2),
-                        Forms\Components\TextInput::make('estado_migratorio3')
-                            ->minLength(2)
-                            ->maxLength(255),
-                        Forms\Components\DatePicker::make('fec_nac3')
-                            ->native(false),
-                        Forms\Components\TextInput::make('dependiente4')
-                            ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_cobertura4')
-                            ->boolean()
-                            ->columns(2),
-                        Forms\Components\TextInput::make('estado_migratorio4')
-                            ->minLength(2)
-                            ->maxLength(255),
-                        Forms\Components\DatePicker::make('fec_nac4')
-                            ->native(false),
-                        Forms\Components\TextInput::make('dependiente_x')
-                            ->maxValue(50),
-                        Forms\Components\Radio::make('aplica_cobertura_x')
-                            ->boolean()
-                            ->columns(2),
-                        Forms\Components\TextInput::make('estado_migratorio_x')
-                            ->minLength(2)
-                            ->maxLength(255),
-                        Forms\Components\DatePicker::make('fec_nac_x')
+                        Forms\Components\Select::make('estado_migratorio_id')
+                            ->relationship('estado_migratorio', 'codigo')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
+                        Forms\Components\DatePicker::make('fec_nac')
                             ->native(false),
                     ])->columns(4)
             ]);
@@ -88,45 +50,13 @@ class DependienteResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id'),
-                TextColumn::make('dependiente1')
+                TextColumn::make('nombre')
                     ->searchable(),
-                TextColumn::make('aplica_cobertura1')
+                TextColumn::make('aplica_cobertura')
                     ->searchable(),
-                TextColumn::make('estado_migratorio1')
+                TextColumn::make('estado_migratorio.codigo')
                     ->searchable(),
-                TextColumn::make('fec_nac1')
-                    ->searchable(),
-                TextColumn::make('dependiente2')
-                    ->searchable(),
-                TextColumn::make('aplica_cobertura2')
-                    ->searchable(),
-                TextColumn::make('estado_migratorio2')
-                    ->searchable(),
-                TextColumn::make('fec_nac2')
-                    ->searchable(),
-                TextColumn::make('dependiente3')
-                    ->searchable(),
-                TextColumn::make('aplica_cobertura3')
-                    ->searchable(),
-                TextColumn::make('estado_migratorio3')
-                    ->searchable(),
-                TextColumn::make('fec_nac3')
-                    ->searchable(),
-                TextColumn::make('dependiente4')
-                    ->searchable(),
-                TextColumn::make('aplica_cobertura4')
-                    ->searchable(),
-                TextColumn::make('estado_migratorio4')
-                    ->searchable(),
-                TextColumn::make('fec_nac4')
-                    ->searchable(),
-                TextColumn::make('dependiente_x')
-                    ->searchable(),
-                TextColumn::make('aplica_cobertura_x')
-                    ->searchable(),
-                TextColumn::make('estado_migratorio_x')
-                    ->searchable(),
-                TextColumn::make('fec_nac_x')
+                TextColumn::make('fec_nac')
                     ->searchable(),
             ])
             ->filters([
@@ -149,7 +79,7 @@ class DependienteResource extends Resource
     public static function getRelations(): array
     {
         return [
-
+           //RelationManagers\PostsRelationManager::class,
         ];
     }
 

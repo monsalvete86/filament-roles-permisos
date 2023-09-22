@@ -28,6 +28,30 @@ class Cliente extends Model
         'estado_migratorio_id',
         'tipo_trabajo',
         'personas_aseguradas',
+        'estado_civil_conyugue',
+        'nombre_conyugue',
+        'aplica_covertura_conyugue',
+        'dependientes_fuera_pareja',
+        'quien_aporta_ingresos',
+        'quien_declara_taxes',
+        'total_ingresos_gf',
+        'estado_cliente',
+        // 'digitadora_id',
+        'fecha_digitadora',
+        // 'benefit_id',
+        'fecha_benefit',
+        // 'procesador_id',
+        'cobertura_ant',
+        'codigo_anterior',
+        'ultimo_agente',
+        'fecha_retiro',
+        'agente',
+        'inicio_cobertura',
+        'fin_cobertura',
+        'imagen',
+        'nota_benefit',
+        'nota_procesador',
+        'nota_digitadora',
     ];
 
     public function estado(): BelongsTo
@@ -50,9 +74,9 @@ class Cliente extends Model
         return $this->belongsTo(EstadoMigratorio::class, 'estado_migratorio_id');
     }
 
-    public function dependiente(): HasMany
+    public function dependientes(): HasMany
     {
-        return $this->hasMany(Dependiente::class, 'dependiente');
+        return $this->hasMany(Dependiente::class);
     }
 
 }

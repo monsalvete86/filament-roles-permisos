@@ -88,14 +88,14 @@ class CompaniaResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -103,5 +103,5 @@ class CompaniaResource extends Resource
             'create' => Pages\CreateCompania::route('/create'),
             'edit' => Pages\EditCompania::route('/{record}/edit'),
         ];
-    }    
+    }
 }
