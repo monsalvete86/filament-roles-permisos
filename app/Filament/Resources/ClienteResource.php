@@ -32,10 +32,12 @@ class ClienteResource extends Resource
                 Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nombre1')
+                            ->required()
                             ->maxValue(50),
                         Forms\Components\TextInput::make('nombre2')
                             ->maxValue(50),
                         Forms\Components\TextInput::make('apellido1')
+                            ->required()
                             ->maxValue(50),
                         Forms\Components\TextInput::make('apellido2')
                             ->maxValue(50),

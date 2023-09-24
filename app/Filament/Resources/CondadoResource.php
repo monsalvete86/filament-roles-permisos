@@ -32,6 +32,7 @@ class CondadoResource extends Resource
                 Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nombre')
+                            ->required()
                             ->minLength(2)
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),

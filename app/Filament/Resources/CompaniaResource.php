@@ -32,6 +32,7 @@ class CompaniaResource extends Resource
                 Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nombre_companias')
+                            ->required()
                             ->minLength(2)
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
