@@ -15,9 +15,10 @@ class Dependiente extends Model
         'aplica_cobertura',
         'estado_migratorio_id',
         'fec_nac',
+        'cliente_id',
     ];
 
-    public function clientes(): BelongsTo
+    public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);
     }

@@ -28,8 +28,7 @@ class DependienteResource extends Resource
                 Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nombre')
-                            ->maxValue(50)
-                            ->required(),
+                            ->maxValue(50),
                         Forms\Components\Radio::make('aplica_cobertura')
                             ->required()
                             ->boolean()
@@ -41,6 +40,11 @@ class DependienteResource extends Resource
                             ->required(),
                         Forms\Components\DatePicker::make('fec_nac')
                             ->native(false),
+                        Forms\Components\Select::make('cliente_id')
+                            ->relationship('cliente', 'nombre1')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                     ])->columns(4)
             ]);
     }
@@ -57,6 +61,8 @@ class DependienteResource extends Resource
                 TextColumn::make('estado_migratorio.codigo')
                     ->searchable(),
                 TextColumn::make('fec_nac')
+                    ->searchable(),
+                TextColumn::make('cliente.nombre1')
                     ->searchable(),
             ])
             ->filters([

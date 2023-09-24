@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\CiudadResource\Pages;
@@ -31,20 +32,21 @@ class CiudadResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()->schema([
-                    Forms\Components\TextInput::make('nombre')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('abreviatura')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\Select::make('condado_id')
-                        ->relationship('condado', 'nombre')
-                        ->searchable()
-                        ->preload()
-                        ->required(),
+                Section::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('nombre')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('abreviatura')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\Select::make('condado_id')
+                            ->relationship('condado', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                 ])->columns(2)
             ]);
     }

@@ -31,18 +31,20 @@ class EstadoResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                    Forms\Components\TextInput::make('nombre')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('codigo_postal')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('abreviatura')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('nombre')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('codigo_postal')
+                            ->required()
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('abreviatura')
+                            ->required()
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
                 ])->columns(2)
             ]);
     }
@@ -75,14 +77,14 @@ class EstadoResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -90,5 +92,5 @@ class EstadoResource extends Resource
             'create' => Pages\CreateEstado::route('/create'),
             'edit' => Pages\EditEstado::route('/{record}/edit'),
         ];
-    }    
+    }
 }

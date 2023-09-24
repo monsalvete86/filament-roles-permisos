@@ -9,13 +9,15 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\FileUpload;
 use App\Filament\Resources\ClienteResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\ClienteResource\RelationManagers;
 use Filament\Resources\RelationManagers\RelationManager;
+use App\Filament\Resources\ClienteResource\RelationManagers;
 
 class ClienteResource extends Resource
 {
@@ -29,25 +31,21 @@ class ClienteResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
+                        Forms\Components\TextInput::make('nombre1')
+                            ->maxValue(50),
+                        Forms\Components\TextInput::make('nombre2')
+                            ->maxValue(50),
+                        Forms\Components\TextInput::make('apellido1')
+                            ->maxValue(50),
+                        Forms\Components\TextInput::make('apellido2')
+                            ->maxValue(50),
                         Forms\Components\TextInput::make('telefono')
                             ->maxValue(50),
                         Forms\Components\TextInput::make('email')
                             ->label('Email address')
-                            ->required()
                             ->email()
+                            ->required()
                             ->unique(ignoreRecord: true),
-                        Forms\Components\TextInput::make('nombre1')
-                            ->maxValue(50)
-                            ->required(),
-                        Forms\Components\TextInput::make('nombre2')
-                            ->maxValue(50)
-                            ->required(),
-                        Forms\Components\TextInput::make('apellido1')
-                            ->maxValue(50)
-                            ->required(),
-                        Forms\Components\TextInput::make('apellido2')
-                            ->maxValue(50)
-                            ->required(),
                         Forms\Components\Radio::make('aplica_cobertura')
                             ->required()
                             ->boolean()
@@ -55,9 +53,11 @@ class ClienteResource extends Resource
                         Forms\Components\DatePicker::make('fec_nac')
                             ->native(false),
                         Forms\Components\TextInput::make('direccion')
+                            ->required()
                             ->minLength(2)
                             ->maxLength(255),
                         Forms\Components\TextInput::make('codigopostal')
+                            ->required()
                             ->length(8),
                         Forms\Components\Select::make('estado_id')
                             ->relationship('estado', 'nombre')
@@ -79,25 +79,113 @@ class ClienteResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required(),
-                        Forms\Components\TextInput::make('tipo_trabajo')
-                            ->minLength(2)
-                            ->maxLength(255),
-                        Forms\Components\Radio::make('personas_aseguradas')
-                            ->columns(4)
-                            ->required()
+                        Forms\Components\Select::make('tipo_trabajo')
                             ->options([
-                                'Solo' => 'S',
-                                'Conyugue' => 'C',
-                                'Dependientes' => 'D',
-                                'Conyugue y Dependientes' => 'C&D'
+                                '1099' => '1099',
+                                'W2' => 'W2',
                             ])
-                            ->descriptions([
-                                'Solo' => 'Solo.',
-                                'Conyugue' => 'Conyugue.',
-                                'Dependientes' => 'Dependientes.',
-                                'Conyugue y Dependientes' => 'Conyugue y Dependientes.'
+                            ->required()
+                            ->native(false),
+                        Forms\Components\Select::make('personas_aseguradas')
+                            ->options([
+                                'Solo' => 'Solo',
+                                'Conyugue' => 'Conyugue',
+                                'Dependientes' => 'Dependientes',
+                                'Conyugue y Dependientes' => 'C&D',
                             ])
-                    ])->columns(3)
+                            ->required()
+                            ->native(false),
+                        Forms\Components\Select::make('estado_civil_conyugue')
+                            ->options([
+                                'Soltero' => 'Soltero',
+                                'Casado' => 'Casado',
+                                'Cabeza de hogar' => 'Cabeza de hogar',
+                                'Opcional' => 'Opcional',
+                            ])
+                            ->required()
+                            ->native(false),
+                        Forms\Components\TextInput::make('nombre_conyugue')
+                            ->maxValue(50),
+                        Forms\Components\Radio::make('aplica_covertura_conyugue')
+                            ->boolean()
+                            ->required()
+                            ->columns(2),
+                        Forms\Components\Radio::make('dependientes_fuera_pareja')
+                            ->boolean()
+                            ->required()
+                            ->columns(2),
+                        Forms\Components\Select::make('quien_aporta_ingresos')
+                            ->options([
+                                'Solo' => 'Solo',
+                                'Conyugue' => 'Conyugue',
+                                'Juntos' => 'Juntos',
+                            ])
+                            ->required()
+                            ->native(false),
+                        Forms\Components\Select::make('quien_declara_taxes')
+                            ->options([
+                                'Solo' => 'Solo',
+                                'Conyugue' => 'Conyugue',
+                                'Juntos' => 'Juntos',
+                            ])
+                            ->required()
+                            ->native(false),
+                        Forms\Components\TextInput::make('total_ingresos_gf')
+                            ->label('Total ingresos gf')
+                            ->type('number')
+                            ->placeholder('Ingrese el total de ingresos GF'),
+                        Forms\Components\TextInput::make('estado_cliente')
+                            ->required()
+                            ->maxValue(50),
+                        /* Forms\Components\Select::make('digitadora_id')
+                            ->relationship('digitadora', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(), */
+                        Forms\Components\DatePicker::make('fecha_digitadora')
+                            ->native(false),
+                        /* Forms\Components\Select::make('benefit_id')
+                            ->relationship('benefit', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(), */
+                        Forms\Components\DatePicker::make('fecha_benefit')
+                            ->native(false),
+                        /* Forms\Components\Select::make('procesador_id')
+                            ->relationship('procesador', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(), */
+                        Forms\Components\Select::make('cobertura_ant')
+                            ->options([
+                                'Si' => 'Si',
+                                'No' => 'No',
+                                'Xinfo' => 'Xinfo',
+                            ])
+                            ->native(false),
+                        Forms\Components\TextInput::make('codigo_anterior')
+                            ->label('Código anterior')
+                            ->type('number')
+                            ->placeholder('Ingrese el código anterior'),
+                        Forms\Components\TextInput::make('ultimo_agente')
+                            ->maxValue(50),
+                        Forms\Components\DatePicker::make('fecha_retiro')
+                            ->native(false),
+                        Forms\Components\TextInput::make('agente')
+                            ->maxValue(50),
+                        Forms\Components\DatePicker::make('inicio_cobertura')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\DatePicker::make('fin_cobertura')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\TextInput::make('image')
+                            ->url()
+                            ->suffixIcon('heroicon-m-globe-alt'),
+                        Textarea::make('nota_benefit'),
+                        Textarea::make('nota_procesador'),
+                        Textarea::make('nota_digitadora'),
+                    ])->columns(4)
             ]);
     }
 
@@ -106,10 +194,6 @@ class ClienteResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id'),
-                TextColumn::make('telefono')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->searchable(),
                 TextColumn::make('nombre1')
                     ->searchable(),
                 TextColumn::make('nombre2')
@@ -117,6 +201,10 @@ class ClienteResource extends Resource
                 TextColumn::make('apellido1')
                     ->searchable(),
                 TextColumn::make('apellido2')
+                    ->searchable(),
+                TextColumn::make('telefono')
+                    ->searchable(),
+                TextColumn::make('email')
                     ->searchable(),
                 TextColumn::make('aplica_cobertura')
                     ->searchable(),
@@ -207,7 +295,7 @@ class ClienteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\DependientesRelationManager::class,
         ];
     }
 

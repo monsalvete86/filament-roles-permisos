@@ -31,27 +31,28 @@ class CompaniaResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                    Forms\Components\TextInput::make('nombre_companias')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('direccion')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('telefono')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('imeil')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\Select::make('estado_id')
-                        ->relationship('estado', 'nombre')
-                        ->searchable()
-                        ->preload()
-                        ->required(),
+                        Forms\Components\TextInput::make('nombre_companias')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('direccion')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('telefono')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('imeil')
+                            ->required()
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\Select::make('estado_id')
+                            ->relationship('estado', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                 ])->columns(2)
             ]);
     }

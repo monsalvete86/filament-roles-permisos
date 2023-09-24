@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('dependientes', function (Blueprint $table) {
             $table->id();
-            //$table->foreignId('cliente_id');
+            $table->foreignId('cliente_id')->constrained('clientes')->cascadeOnDelete();
             $table->string('nombre')->nullable();
             $table->boolean('aplica_cobertura')->default(true);
             $table->foreignId('estado_migratorio_id')->constrained('estado_migratorios')->cascadeOnDelete();
-            $table->date('fec_nac');
+            $table->date('fec_nac')->nullable();
             $table->timestamps();
         });
     }

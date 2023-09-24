@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('estado_migratorios', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('codigo');
+            $table->string('nombre')->nullable();
+            $table->string('codigo')->nullable();
             $table->timestamps();
         });
     }

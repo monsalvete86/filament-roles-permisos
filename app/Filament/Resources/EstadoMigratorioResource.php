@@ -29,14 +29,15 @@ class EstadoMigratorioResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                    Forms\Components\TextInput::make('nombre')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('codigo')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('nombre')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('codigo')
+                            ->required()
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
                 ])->columns(2)
             ]);
     }

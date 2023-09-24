@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('condados', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nombre');
-            $table->string('abreviatura');
+            $table->string('nombre')->nullable();
+            $table->string('abreviatura')->nullable();
             $table->foreignId('estado_id')->constrained('estados')->cascadeOnDelete();
             $table->timestamps();
         });

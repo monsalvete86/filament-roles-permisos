@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('companias', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_companias');
+            $table->string('nombre_companias')->nullable();
             $table->string('direccion')->nullable();
             $table->string('telefono')->nullable();
-            $table->string('imeil');
+            $table->string('imeil')->nullable();
             $table->foreignId('estado_id')->constrained('estados')->cascadeOnDelete();
             $table->timestamps();
         });

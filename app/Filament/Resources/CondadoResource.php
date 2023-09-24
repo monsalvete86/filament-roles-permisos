@@ -31,19 +31,19 @@ class CondadoResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                    Forms\Components\TextInput::make('nombre')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\TextInput::make('abreviatura')
-                        ->minLength(2)
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true),
-                    Forms\Components\Select::make('estado_id')
-                        ->relationship('estado', 'nombre')
-                        ->searchable()
-                        ->preload()
-                        ->required(),
+                        Forms\Components\TextInput::make('nombre')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\TextInput::make('abreviatura')
+                            ->minLength(2)
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
+                        Forms\Components\Select::make('estado_id')
+                            ->relationship('estado', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                 ])->columns(2)
             ]);
     }
