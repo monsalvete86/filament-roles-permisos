@@ -34,16 +34,25 @@ class UserResource extends Resource
 					->email()
 					->required()
 					->maxLength(255),
-				Forms\Components\Select::make('roles')
-					->label('Rol')
-					->required()
-					->searchable()
-					->relationship('roles', 'name'),
 				Forms\Components\TextInput::make('password')
 					->password()
 					->dehydrateStateUsing(fn ($state) => Hash::make($state))
 					->dehydrated(fn ($state) => filled($state))
 					->required(fn (string $context): bool => $context === 'create'),
+				/*Forms\Components\TextInput::make('digitador')
+					->label('Digitador')
+					->maxLength(255),
+				Forms\Components\TextInput::make('benefit')
+					->label('Benefit')
+					->maxLength(255),
+				Forms\Components\TextInput::make('procesador')
+					->label('Procesador')
+					->maxLength(255),*/
+				Forms\Components\Select::make('roles')
+					->label('Rol')
+					->required()
+					->searchable()
+					->relationship('roles', 'name'),
 			 ]);
 	}
 
@@ -56,11 +65,18 @@ class UserResource extends Resource
 					->searchable(),
 				Tables\Columns\TextColumn::make('email')
 					->searchable(),
-				/*Tables\Columns\TextColumn::make('created_at')
-					->dateTime()
+				/*Tables\Columns\TextColumn::make('digitador')
+					->label('Digitador')
+					->searchable(),
+				Tables\Columns\TextColumn::make('benefit')
+					->label('Benefit')
+					->searchable(),
+				Tables\Columns\TextColumn::make('procesador')
+					->label('Procesador')
+					->searchable(),*/
+				Tables\Columns\TextColumn::make('roles.name')
 					->sortable()
-					->toggleable(isToggledHiddenByDefault: true), */
-				Tables\Columns\TextColumn::make('roles.name')->sortable()->searchable()
+					->searchable(),
 			])
 			->filters([
 				  //

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->foreignId('ciudad_id')->constrained('ciudads')->cascadeOnDelete();
             $table->foreignId('estado_migratorio_id')->constrained('estado_migratorios')->cascadeOnDelete();
             $table->string('tipo_trabajo');
-            $table->string('personas_aseguradas');  //de aqui comienza todo.
+            $table->string('personas_aseguradas');
             $table->string('estado_civil_conyugue')->nullable();
             $table->string('nombre_conyugue')->nullable();
             $table->boolean('aplica_covertura_conyugue')->default(true);
@@ -38,18 +38,21 @@ return new class extends Migration
             $table->string('quien_declara_taxes')->nullable();
             $table->float('total_ingresos_gf')->nullable();
             $table->string('estado_cliente')->nullable();
-            // $table->foreignId('digitadora_id')->constrained('digitadoras')->cascadeOnDelete();
+            //$table->foreignId('digitador_id')->constrained('clientes')->cascadeOnDelete();
             $table->timestamp('fecha_digitadora')->nullable();
-            // $table->foreignId('benefit_id')->constrained('benefits')->cascadeOnDelete();
+            //$table->foreignId('benefit_id')->constrained('clientes')->cascadeOnDelete();
             $table->timestamp('fecha_benefit')->nullable();
-            // $table->foreignId('procesador_id')->constrained('procesadores')->cascadeOnDelete();
-            $table->string('cobertura_ant')->nullable();
+            //$table->foreignId('procesador_id')->constrained('clientes')->cascadeOnDelete();
             $table->integer('codigo_anterior')->nullable();
+            $table->string('cobertura_ant')->nullable();
             $table->string('ultimo_agente')->nullable();
             $table->date('fecha_retiro')->nullable();
-            $table->string('agente')->nullable();
             $table->date('inicio_cobertura')->nullable();
             $table->date('fin_cobertura')->nullable();
+            $table->string('agente')->nullable();
+            $table->date('inicio_cobertura_vig')->nullable();
+            $table->date('fin_cobertura_vig')->nullable();
+            $table->date('fecha_retiro_cobertura_ant')->nullable();
             $table->string('imagen')->nullable();
             $table->text('nota_benefit')->nullable();
             $table->text('nota_procesador')->nullable();

@@ -10,6 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,6 +29,9 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+       // 'digitador',
+       // 'benefit',
+        //'procesador',
     ];
 
     /**
@@ -60,4 +64,10 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsTo(Role::class);
     }*/
+
+    public function cliente(): HasMany
+    {
+        return $this->hasMany(Cliente::class);
+    }
+
 }

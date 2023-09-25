@@ -154,25 +154,25 @@ class ClienteResource extends Resource
                         Forms\Components\TextInput::make('estado_cliente')
                             ->required()
                             ->maxValue(50),
-                        /* Forms\Components\Select::make('digitadora_id')
-                            ->relationship('digitadora', 'nombre')
+                        /*Forms\Components\Select::make('digitador_id')
+                            ->relationship('cliente', 'digitador_id')
                             ->searchable()
                             ->preload()
-                            ->required(), */
+                            ->required(),*/
                         Forms\Components\DatePicker::make('fecha_digitadora')
                             ->native(false),
-                        /* Forms\Components\Select::make('benefit_id')
-                            ->relationship('benefit', 'nombre')
+                        /*Forms\Components\Select::make('benefit_id')
+                            ->relationship('cliente', 'benefit_id')
                             ->searchable()
                             ->preload()
-                            ->required(), */
+                            ->required(),*/
                         Forms\Components\DatePicker::make('fecha_benefit')
                             ->native(false),
-                        /* Forms\Components\Select::make('procesador_id')
-                            ->relationship('procesador', 'nombre')
+                        /*Forms\Components\Select::make('procesador_id')
+                            ->relationship('cliente', 'procesador_id')
                             ->searchable()
                             ->preload()
-                            ->required(), */
+                            ->required(),*/
                         Forms\Components\Select::make('cobertura_ant')
                             ->options([
                                 'Si' => 'Si',
@@ -194,6 +194,15 @@ class ClienteResource extends Resource
                             ->native(false)
                             ->required(),
                         Forms\Components\DatePicker::make('fin_cobertura')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\DatePicker::make('inicio_cobertura_vig')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\DatePicker::make('fin_cobertura_vig')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\DatePicker::make('fecha_retiro_cobertura_ant')
                             ->native(false)
                             ->required(),
                         Forms\Components\TextInput::make('image')
@@ -259,15 +268,15 @@ class ClienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('estado_cliente')
                     ->searchable(),
-                /* TextColumn::make('digitadora_id')
-                    ->searchable(), */
+                /*TextColumn::make('digitador_id.cliente')
+                    ->searchable(),*/
                 TextColumn::make('fecha_digitadora')
                     ->searchable(),
-                /* TextColumn::make('benefit_id')
-                    ->searchable(), */
+                /*TextColumn::make('benefit_id.cliente')
+                    ->searchable(),*/
                 TextColumn::make('fecha_benefit')
                     ->searchable(),
-                /* TextColumn::make('procesador_id')
+                /*TextColumn::make('procesador_id.cliente')
                     ->searchable(),*/
                 TextColumn::make('cobertura_ant')
                     ->searchable(),
@@ -282,6 +291,12 @@ class ClienteResource extends Resource
                 TextColumn::make('inicio_cobertura')
                     ->searchable(),
                 TextColumn::make('fin_cobertura')
+                    ->searchable(),
+                TextColumn::make('inicio_cobertura_vig')
+                    ->searchable(),
+                TextColumn::make('fin_cobertura_vig')
+                    ->searchable(),
+                TextColumn::make('fecha_retiro_cobertura_ant')
                     ->searchable(),
                 TextColumn::make('imagen')
                     ->searchable(),
