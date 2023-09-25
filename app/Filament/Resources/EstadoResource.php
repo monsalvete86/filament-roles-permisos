@@ -33,19 +33,16 @@ class EstadoResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('nombre')
                             ->required()
-                            ->minLength(2)
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(),
                         Forms\Components\TextInput::make('codigo_postal')
                             ->required()
-                            ->minLength(2)
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->length(5)
+                            ->unique(),
                         Forms\Components\TextInput::make('abreviatura')
                             ->required()
-                            ->minLength(2)
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(),
                 ])->columns(2)
             ]);
     }

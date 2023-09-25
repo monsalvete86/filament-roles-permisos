@@ -33,22 +33,19 @@ class CompaniaResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('nombre_companias')
                             ->required()
-                            ->minLength(2)
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(),
                         Forms\Components\TextInput::make('direccion')
-                            ->minLength(2)
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->maxValue(50),
                         Forms\Components\TextInput::make('telefono')
-                            ->minLength(2)
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique()
+                            ->tel()
+                            ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                         Forms\Components\TextInput::make('imeil')
+                            ->label('Email address')
+                            ->email()
                             ->required()
-                            ->minLength(2)
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(),
                         Forms\Components\Select::make('estado_id')
                             ->relationship('estado', 'nombre')
                             ->searchable()

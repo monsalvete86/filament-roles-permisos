@@ -33,28 +33,30 @@ class ClienteResource extends Resource
 
     public static function form(Form $form): Form
     {
-    
+
         return $form
             ->schema([
                 Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nombre1')
                             ->required()
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('nombre2')
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('apellido1')
                             ->required()
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('apellido2')
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('telefono')
-                            ->maxValue(50),
+                            ->unique()
+                            ->tel()
+                            ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                         Forms\Components\TextInput::make('email')
                             ->label('Email address')
                             ->email()
                             ->required()
-                            ->unique(ignoreRecord: true),
+                            ->unique(),
                         Forms\Components\Radio::make('aplica_cobertura')
                             ->required()
                             ->boolean()
@@ -62,12 +64,10 @@ class ClienteResource extends Resource
                         Forms\Components\DatePicker::make('fec_nac')
                             ->native(false),
                         Forms\Components\TextInput::make('direccion')
-                            ->required()
-                            ->minLength(2)
-                            ->maxLength(255),
+                            ->maxValue(50),
                         Forms\Components\TextInput::make('codigopostal')
                             ->required()
-                            ->length(8),
+                            ->length(5),
                         Forms\Components\Select::make('estado_id')
                             ->relationship('estado', 'nombre')
                             ->searchable()
@@ -124,7 +124,7 @@ class ClienteResource extends Resource
                             ->required()
                             ->native(false),
                         Forms\Components\TextInput::make('nombre_conyugue')
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\Radio::make('aplica_covertura_conyugue')
                             ->boolean()
                             ->required()
@@ -187,11 +187,11 @@ class ClienteResource extends Resource
                             ->type('number')
                             ->placeholder('Ingrese el código anterior'),
                         Forms\Components\TextInput::make('ultimo_agente')
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\DatePicker::make('fecha_retiro')
                             ->native(false),
                         Forms\Components\TextInput::make('agente')
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\DatePicker::make('inicio_cobertura')
                             ->native(false)
                             ->required(),

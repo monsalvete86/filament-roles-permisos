@@ -29,7 +29,7 @@ class DependienteResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('nombre')
                             ->required()
-                            ->maxValue(50),
+                            ->maxLength(255),
                         Forms\Components\Radio::make('aplica_cobertura')
                             ->required()
                             ->boolean()

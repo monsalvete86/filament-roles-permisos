@@ -33,13 +33,11 @@ class CondadoResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('nombre')
                             ->required()
-                            ->minLength(2)
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(),
                         Forms\Components\TextInput::make('abreviatura')
-                            ->minLength(2)
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(),
                         Forms\Components\Select::make('estado_id')
                             ->relationship('estado', 'nombre')
                             ->searchable()
@@ -77,14 +75,14 @@ class CondadoResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -92,5 +90,5 @@ class CondadoResource extends Resource
             'create' => Pages\CreateCondado::route('/create'),
             'edit' => Pages\EditCondado::route('/{record}/edit'),
         ];
-    }    
+    }
 }

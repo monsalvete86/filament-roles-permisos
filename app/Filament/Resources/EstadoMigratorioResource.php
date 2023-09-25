@@ -36,9 +36,7 @@ class EstadoMigratorioResource extends Resource
                             ->unique(ignoreRecord: true),
                         Forms\Components\TextInput::make('codigo')
                             ->required()
-                            ->minLength(2)
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->length(5),
                 ])->columns(2)
             ]);
     }

@@ -66,7 +66,7 @@ class UserResource extends Resource
 				  //
 			  ]);
 
-			if (auth()->user()->can('Create User')){
+			// if (auth()->user()->can('Create User')){
 			$table
 				->actions([
 					Tables\Actions\EditAction::make(),
@@ -77,7 +77,7 @@ class UserResource extends Resource
 						Tables\Actions\DeleteBulkAction::make(),
 					]),
 				]);
-			}
+			// }
 			$table
 				->emptyStateActions([
 					Tables\Actions\CreateAction::make(),
