@@ -37,7 +37,7 @@ class EstadoResource extends Resource
                             ->unique(),
                         Forms\Components\TextInput::make('codigo_postal')
                             ->required()
-                            ->length(5)
+                            ->length(6)
                             ->unique(),
                         Forms\Components\TextInput::make('abreviatura')
                             ->required()

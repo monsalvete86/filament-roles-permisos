@@ -36,11 +36,9 @@ class CiudadResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('nombre')
                             ->required()
-                            ->minLength(2)
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         Forms\Components\TextInput::make('abreviatura')
-                            ->minLength(2)
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         Forms\Components\Select::make('condado_id')

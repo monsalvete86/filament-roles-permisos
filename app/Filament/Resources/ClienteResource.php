@@ -49,14 +49,12 @@ class ClienteResource extends Resource
                         Forms\Components\TextInput::make('apellido2')
                             ->maxLength(255),
                         Forms\Components\TextInput::make('telefono')
-                            ->unique()
                             ->tel()
                             ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                         Forms\Components\TextInput::make('email')
                             ->label('Email address')
                             ->email()
-                            ->required()
-                            ->unique(),
+                            ->required(),
                         Forms\Components\Radio::make('aplica_cobertura')
                             ->required()
                             ->boolean()
@@ -67,7 +65,7 @@ class ClienteResource extends Resource
                             ->maxValue(50),
                         Forms\Components\TextInput::make('codigopostal')
                             ->required()
-                            ->length(5),
+                            ->length(6),
                         Forms\Components\Select::make('estado_id')
                             ->relationship('estado', 'nombre')
                             ->searchable()
