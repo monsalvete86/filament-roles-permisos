@@ -21,7 +21,7 @@ class CondadoResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationGroup = 'Gestion del Sistema';
+    protected static ?string $navigationGroup = 'Configuración del Sistema';
 
     protected static ?int $navigationSort = 1;
 

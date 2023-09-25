@@ -4,10 +4,15 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Estado;
 use App\Models\Cliente;
+use App\Models\Condado;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Collection;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
@@ -18,6 +23,7 @@ use App\Filament\Resources\ClienteResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\ClienteResource\RelationManagers;
+use App\Models\Ciudad;
 
 class ClienteResource extends Resource
 {
@@ -27,6 +33,7 @@ class ClienteResource extends Resource
 
     public static function form(Form $form): Form
     {
+    
         return $form
             ->schema([
                 Section::make()
@@ -65,14 +72,24 @@ class ClienteResource extends Resource
                             ->relationship('estado', 'nombre')
                             ->searchable()
                             ->preload()
+                            ->live()
+                            ->afterStateUpdated(fn (Set $set) => $set('condado_id', null))
                             ->required(),
                         Forms\Components\Select::make('condado_id')
-                            ->relationship('condado', 'nombre')
+                            ->options (fn (Get $get): Collection => Condado::all()
+                                ->where('estado_id', $get('estado_id'))
+                                ->pluck('nombre', 'id')
+                            )
                             ->searchable()
                             ->preload()
+                            ->live()
+                            ->afterStateUpdated(fn (Set $set) => $set('ciudad_id', null))
                             ->required(),
                         Forms\Components\Select::make('ciudad_id')
-                            ->relationship('ciudad', 'nombre')
+                            ->options (fn (Get $get): Collection => Ciudad::all()
+                                ->where('condado_id', $get('condado_id'))
+                                ->pluck('nombre', 'id')
+                            )
                             ->searchable()
                             ->preload()
                             ->required(),
