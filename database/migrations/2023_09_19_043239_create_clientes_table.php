@@ -43,6 +43,7 @@ return new class extends Migration
             $table->foreignId('benefit_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('fecha_benefit')->nullable();
             $table->foreignId('procesador_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('compania_id')->constrained('companias')->cascadeOnDelete();
             $table->integer('codigo_anterior')->nullable();
             $table->string('cobertura_ant')->nullable();
             $table->string('ultimo_agente')->nullable();

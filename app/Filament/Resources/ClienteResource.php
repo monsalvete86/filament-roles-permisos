@@ -195,6 +195,13 @@ class ClienteResource extends Resource
                         Forms\Components\TextInput::make('procesador.procesador')
                             //->hidden()
                             ->disabled(! auth()->user()->can('EsBenefit')),
+                        Forms\Components\Select::make('compania_id')
+                            ->relationship('compania', 'nombre_companias')
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->disabled(! auth()->user()->can('EsBenefit')),
+                            //->required(),
                         Forms\Components\Select::make('cobertura_ant')
                             ->disabled(! auth()->user()->can('EsBenefit'))
                             //->hidden(! auth()->user()->can('EsBenfit'))
@@ -321,6 +328,8 @@ class ClienteResource extends Resource
                 TextColumn::make('procesador.procesador')
                     //->hidden()
                     ->searchable(),
+                TextColumn::make('compania.nombre_companias')
+                    ->searchable(),
                 TextColumn::make('cobertura_ant')
                     ->searchable(),
                 TextColumn::make('codigo_anterior')
@@ -355,7 +364,8 @@ class ClienteResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->hidden(! auth()->user()->can('EsAdmin')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

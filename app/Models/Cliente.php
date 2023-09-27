@@ -41,6 +41,7 @@ class Cliente extends Model
         'benefit_id',
         'fecha_benefit',
         'procesador_id',
+        'compania_id',
         'cobertura_ant',
         'codigo_anterior',
         'ultimo_agente',
@@ -97,9 +98,8 @@ class Cliente extends Model
         return $this->belongsTo(User::class, 'procesador_id');
     }
 
-   /*  public function user(): BelongsTo
+    public function compania(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Compania::class);
     }
-    */
 }

@@ -13,7 +13,8 @@ class EditCliente extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->hidden(! auth()->user()->can('EsAdmin')),
         ];
     }
     protected function getRedirectUrl(): string
