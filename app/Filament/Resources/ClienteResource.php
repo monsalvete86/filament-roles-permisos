@@ -39,31 +39,41 @@ class ClienteResource extends Resource
                 Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nombre1')
+                            ->disabled(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('nombre2')
+                            ->disabled(! auth()->user()->can('EsAdmin'))
                             ->maxLength(255),
                         Forms\Components\TextInput::make('apellido1')
+                            ->disabled(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('apellido2')
+                            ->disabled(! auth()->user()->can('EsAdmin'))
                             ->maxLength(255),
                         Forms\Components\TextInput::make('telefono')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->tel()
                             ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                         Forms\Components\TextInput::make('email')
                             ->label('Email address')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->email()
                             ->required(),
                         Forms\Components\Radio::make('aplica_cobertura')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->boolean()
                             ->columns(2),
                         Forms\Components\DatePicker::make('fec_nac')
+                            ->disabled(! auth()->user()->can('EsAdmin'))
                             ->native(false),
                         Forms\Components\TextInput::make('direccion')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->maxValue(50),
                         Forms\Components\TextInput::make('codigopostal')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->length(6),
                         Forms\Components\Select::make('estado_id')
@@ -71,6 +81,7 @@ class ClienteResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
+                            ->disabled(! auth()->user()->can('EsAdmin'))
                             ->afterStateUpdated(fn (Set $set) => $set('condado_id', null))
                             ->required(),
                         Forms\Components\Select::make('condado_id')
@@ -78,9 +89,11 @@ class ClienteResource extends Resource
                                 ->where('estado_id', $get('estado_id'))
                                 ->pluck('nombre', 'id')
                             )
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->searchable()
                             ->preload()
                             ->live()
+                            ->label('Condado')
                             ->afterStateUpdated(fn (Set $set) => $set('ciudad_id', null))
                             ->required(),
                         Forms\Components\Select::make('ciudad_id')
@@ -88,12 +101,15 @@ class ClienteResource extends Resource
                                 ->where('condado_id', $get('condado_id'))
                                 ->pluck('nombre', 'id')
                             )
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->searchable()
                             ->preload()
+                            ->label('Ciudad')
                             ->required(),
                         Forms\Components\Select::make('estado_migratorio_id')
                             ->relationship('estado_migratorio', 'codigo')
                             ->searchable()
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->preload()
                             ->required(),
                         Forms\Components\Select::make('tipo_trabajo')
@@ -101,6 +117,7 @@ class ClienteResource extends Resource
                                 '1099' => '1099',
                                 'W2' => 'W2',
                             ])
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->native(false),
                         Forms\Components\Select::make('personas_aseguradas')
@@ -110,6 +127,7 @@ class ClienteResource extends Resource
                                 'Dependientes' => 'Dependientes',
                                 'Conyugue y Dependientes' => 'C&D',
                             ])
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->native(false),
                         Forms\Components\Select::make('estado_civil_conyugue')
@@ -119,15 +137,19 @@ class ClienteResource extends Resource
                                 'Cabeza de hogar' => 'Cabeza de hogar',
                                 'Opcional' => 'Opcional',
                             ])
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->native(false),
                         Forms\Components\TextInput::make('nombre_conyugue')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->maxLength(255),
                         Forms\Components\Radio::make('aplica_covertura_conyugue')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->boolean()
                             ->required()
                             ->columns(2),
                         Forms\Components\Radio::make('dependientes_fuera_pareja')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->boolean()
                             ->required()
                             ->columns(2),
@@ -137,6 +159,7 @@ class ClienteResource extends Resource
                                 'Conyugue' => 'Conyugue',
                                 'Juntos' => 'Juntos',
                             ])
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->native(false),
                         Forms\Components\Select::make('quien_declara_taxes')
@@ -145,35 +168,36 @@ class ClienteResource extends Resource
                                 'Conyugue' => 'Conyugue',
                                 'Juntos' => 'Juntos',
                             ])
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->native(false),
                         Forms\Components\TextInput::make('total_ingresos_gf')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->label('Total ingresos gf')
                             ->type('number')
                             ->placeholder('Ingrese el total de ingresos GF'),
                         Forms\Components\TextInput::make('estado_cliente')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->required()
                             ->maxValue(50),
-                        /*Forms\Components\Select::make('digitador_id')
-                            ->relationship('cliente', 'digitador_id')
-                            ->searchable()
-                            ->preload()
-                            ->required(),*/
+                        Forms\Components\TextInput::make('digitador.digitador')
+                            ->hidden()
+                            ->disabled(! auth()->user()->can('EsAdmin')),
                         Forms\Components\DatePicker::make('fecha_digitadora')
+                            ->hidden()
                             ->native(false),
-                        /*Forms\Components\Select::make('benefit_id')
-                            ->relationship('cliente', 'benefit_id')
-                            ->searchable()
-                            ->preload()
-                            ->required(),*/
+                        Forms\Components\TextInput::make('benefit.benefit')
+                            ->hidden()
+                            ->disabled(! auth()->user()->can('EsAdmin')),
                         Forms\Components\DatePicker::make('fecha_benefit')
+                            ->hidden()
                             ->native(false),
-                        /*Forms\Components\Select::make('procesador_id')
-                            ->relationship('cliente', 'procesador_id')
-                            ->searchable()
-                            ->preload()
-                            ->required(),*/
+                        Forms\Components\TextInput::make('procesador.procesador')
+                            //->hidden()
+                            ->disabled(! auth()->user()->can('EsBenefit')),
                         Forms\Components\Select::make('cobertura_ant')
+                            ->disabled(! auth()->user()->can('EsBenefit'))
+                            //->hidden(! auth()->user()->can('EsBenfit'))
                             ->options([
                                 'Si' => 'Si',
                                 'No' => 'No',
@@ -181,36 +205,50 @@ class ClienteResource extends Resource
                             ])
                             ->native(false),
                         Forms\Components\TextInput::make('codigo_anterior')
+                            ->hidden(! auth()->user()->can('EsAdmin'))
                             ->label('Código anterior')
                             ->type('number')
                             ->placeholder('Ingrese el código anterior'),
                         Forms\Components\TextInput::make('ultimo_agente')
+                            ->disabled(! auth()->user()->can('EsBenefit'))
                             ->maxLength(255),
                         Forms\Components\DatePicker::make('fecha_retiro')
+                            ->disabled(! auth()->user()->can('EsBenefit'))
                             ->native(false),
                         Forms\Components\TextInput::make('agente')
+                            ->disabled(! auth()->user()->can('EsBenefit'))
+                            ->hidden(! auth()->user()->can('Crear roles'))
                             ->maxLength(255),
                         Forms\Components\DatePicker::make('inicio_cobertura')
-                            ->native(false)
-                            ->required(),
+                            ->disabled(! auth()->user()->can('EsBenefit'))
+                            ->native(false),
+                            //->required(),
                         Forms\Components\DatePicker::make('fin_cobertura')
-                            ->native(false)
-                            ->required(),
+                            ->disabled(! auth()->user()->can('EsBenefit'))
+                            ->native(false),
+                            //->required(),
                         Forms\Components\DatePicker::make('inicio_cobertura_vig')
-                            ->native(false)
-                            ->required(),
+                            ->disabled(! auth()->user()->can('EsBenefit'))
+                            ->native(false),
+                            //->required(),
                         Forms\Components\DatePicker::make('fin_cobertura_vig')
-                            ->native(false)
-                            ->required(),
+                            ->disabled(! auth()->user()->can('EsBenefit'))
+                            ->native(false),
+                            //->required(),
                         Forms\Components\DatePicker::make('fecha_retiro_cobertura_ant')
-                            ->native(false)
-                            ->required(),
+                            ->disabled(! auth()->user()->can('EsBenefit'))
+                            ->native(false),
+                            //->required(),
                         Forms\Components\TextInput::make('image')
+                            ->disabled(! auth()->user()->can('EsBenefit'))
                             ->url()
                             ->suffixIcon('heroicon-m-globe-alt'),
-                        Textarea::make('nota_benefit'),
-                        Textarea::make('nota_procesador'),
-                        Textarea::make('nota_digitadora'),
+                        Forms\Components\Textarea::make('nota_benefit')
+                            ->disabled(! auth()->user()->can('EsBenefit')),
+                        Forms\Components\Textarea::make('nota_procesador')
+                            ->hidden(! auth()->user()->can('EsAdmin')),
+                        Forms\Components\Textarea::make('nota_digitadora')
+                            ->hidden(! auth()->user()->can('EsAdmin')),
                     ])->columns(4)
             ]);
     }
@@ -268,16 +306,21 @@ class ClienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('estado_cliente')
                     ->searchable(),
-                /*TextColumn::make('digitador_id.cliente')
-                    ->searchable(),*/
+                TextColumn::make('digitador.digitador')
+                    ->hidden()
+                    ->searchable(),
                 TextColumn::make('fecha_digitadora')
+                    ->hidden()
                     ->searchable(),
-                /*TextColumn::make('benefit_id.cliente')
-                    ->searchable(),*/
+                TextColumn::make('benefit.benefit')
+                    ->hidden()
+                    ->searchable(),
                 TextColumn::make('fecha_benefit')
+                    ->hidden()
                     ->searchable(),
-                /*TextColumn::make('procesador_id.cliente')
-                    ->searchable(),*/
+                TextColumn::make('procesador.procesador')
+                    //->hidden()
+                    ->searchable(),
                 TextColumn::make('cobertura_ant')
                     ->searchable(),
                 TextColumn::make('codigo_anterior')
@@ -320,7 +363,7 @@ class ClienteResource extends Resource
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
             ]);
     }
 

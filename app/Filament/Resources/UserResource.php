@@ -2,17 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Hash;
+use Filament\Forms\Components\Section;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\UserResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers;
 
 class UserResource extends Resource
 {
@@ -26,33 +27,39 @@ class UserResource extends Resource
 	{
 		return $form
 			->schema([
-				Forms\Components\TextInput::make('name')
-					->label('Nombre')
-					->required()
-					->maxLength(255),
-				Forms\Components\TextInput::make('email')
-					->email()
-					->required()
-					->maxLength(255),
-				Forms\Components\TextInput::make('password')
-					->password()
-					->dehydrateStateUsing(fn ($state) => Hash::make($state))
-					->dehydrated(fn ($state) => filled($state))
-					->required(fn (string $context): bool => $context === 'create'),
-				/*Forms\Components\TextInput::make('digitador')
-					->label('Digitador')
-					->maxLength(255),
-				Forms\Components\TextInput::make('benefit')
-					->label('Benefit')
-					->maxLength(255),
-				Forms\Components\TextInput::make('procesador')
-					->label('Procesador')
-					->maxLength(255),*/
-				Forms\Components\Select::make('roles')
-					->label('Rol')
-					->required()
-					->searchable()
-					->relationship('roles', 'name'),
+				Section::make()
+                    ->schema([
+						Forms\Components\TextInput::make('name')
+							->label('Nombre')
+							->required()
+							->maxLength(255),
+						Forms\Components\TextInput::make('email')
+							->email()
+							->required()
+							->maxLength(255),
+						Forms\Components\TextInput::make('password')
+							->password()
+							->dehydrateStateUsing(fn ($state) => Hash::make($state))
+							->dehydrated(fn ($state) => filled($state))
+							->required(fn (string $context): bool => $context === 'create'),
+						Forms\Components\TextInput::make('digitador')
+							->hidden()
+							->label('Digitador')
+							->maxLength(255),
+						Forms\Components\TextInput::make('benefit')
+							->hidden()
+							->label('Benefit')
+							->maxLength(255),
+						Forms\Components\TextInput::make('procesador')
+							->hidden()
+							->label('Procesador')
+							->maxLength(255),
+						Forms\Components\Select::make('roles')
+							->label('Rol')
+							->required()
+							->searchable()
+							->relationship('roles', 'name'),
+					])->columns(2)
 			 ]);
 	}
 
@@ -65,15 +72,18 @@ class UserResource extends Resource
 					->searchable(),
 				Tables\Columns\TextColumn::make('email')
 					->searchable(),
-				/*Tables\Columns\TextColumn::make('digitador')
+				Tables\Columns\TextColumn::make('digitador')
+					->hidden()
 					->label('Digitador')
 					->searchable(),
 				Tables\Columns\TextColumn::make('benefit')
+					->hidden()
 					->label('Benefit')
 					->searchable(),
 				Tables\Columns\TextColumn::make('procesador')
+					->hidden()
 					->label('Procesador')
-					->searchable(),*/
+					->searchable(),
 				Tables\Columns\TextColumn::make('roles.name')
 					->sortable()
 					->searchable(),

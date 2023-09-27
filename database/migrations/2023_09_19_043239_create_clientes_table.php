@@ -38,11 +38,11 @@ return new class extends Migration
             $table->string('quien_declara_taxes')->nullable();
             $table->float('total_ingresos_gf')->nullable();
             $table->string('estado_cliente')->nullable();
-            //$table->foreignId('digitador_id')->constrained('clientes')->cascadeOnDelete();
+            $table->foreignId('digitador_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('fecha_digitadora')->nullable();
-            //$table->foreignId('benefit_id')->constrained('clientes')->cascadeOnDelete();
+            $table->foreignId('benefit_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('fecha_benefit')->nullable();
-            //$table->foreignId('procesador_id')->constrained('clientes')->cascadeOnDelete();
+            $table->foreignId('procesador_id')->constrained('users')->cascadeOnDelete();
             $table->integer('codigo_anterior')->nullable();
             $table->string('cobertura_ant')->nullable();
             $table->string('ultimo_agente')->nullable();

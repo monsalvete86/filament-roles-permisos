@@ -36,11 +36,11 @@ class Cliente extends Model
         'quien_declara_taxes',
         'total_ingresos_gf',
         'estado_cliente',
-        // 'digitador_id',
+        'digitador_id',
         'fecha_digitadora',
-        // 'benefit_id',
+        'benefit_id',
         'fecha_benefit',
-        // 'procesador_id',
+        'procesador_id',
         'cobertura_ant',
         'codigo_anterior',
         'ultimo_agente',
@@ -81,23 +81,23 @@ class Cliente extends Model
     {
         return $this->hasMany(Dependiente::class);
     }
-    /*
+
     public function digitador(): BelongsTo
     {
-        return $this->belongsTo(Digitador::class, 'digitador_id');
+        return $this->belongsTo(User::class, 'digitador_id');
     }
 
     public function benefit(): BelongsTo
     {
-        return $this->belongsTo(Benefit::class, 'benefit_id');
+        return $this->belongsTo(User::class, 'benefit_id');
     }
 
     public function procesador(): BelongsTo
     {
-        return $this->belongsTo(Procesador::class, 'procesador_id');
+        return $this->belongsTo(User::class, 'procesador_id');
     }
 
-    public function user(): BelongsTo
+   /*  public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
