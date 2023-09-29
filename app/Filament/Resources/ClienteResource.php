@@ -73,7 +73,7 @@ class ClienteResource extends Resource
                             ->hidden(! auth()->user()->can('EsAdmin'))
                             ->maxValue(50),
                         Forms\Components\TextInput::make('codigopostal')
-                            ->hidden(! auth()->user()->can('EsAdmin'))
+                            ->hidden(! auth()->user()->can('EsBenefit'))
                             ->required()
                             ->length(6),
                         Forms\Components\Select::make('estado_id')
@@ -81,7 +81,7 @@ class ClienteResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->disabled(! auth()->user()->can('EsAdmin'))
+                            ->disabled(! auth()->user()->can('EsBenefit'))
                             ->afterStateUpdated(fn (Set $set) => $set('condado_id', null))
                             ->required(),
                         Forms\Components\Select::make('condado_id')
@@ -177,12 +177,21 @@ class ClienteResource extends Resource
                             ->type('number')
                             ->placeholder('Ingrese el total de ingresos GF'),
                         Forms\Components\TextInput::make('estado_cliente')
-                            ->hidden(! auth()->user()->can('EsAdmin'))
+                            ->hidden(! auth()->user()->can('EsBenefit'))
                             ->required()
                             ->maxValue(50),
-                        Forms\Components\TextInput::make('digitador.digitador')
-                            ->hidden()
-                            ->disabled(! auth()->user()->can('EsAdmin')),
+                        Forms\Components\Select::make('digitador.digitador')
+                            ->options([
+                                'Digitado' => 'Digitado',
+                                'Benefit' => 'Benefit',
+                                'Pass' => 'Pass',
+                                'Aceptado' => 'Aceptado',
+                                'Cancelado' => 'Cancelado',
+                                'Retirado' => 'Retirado',
+                            ])
+                            ->required()
+                            ->native(false),
+                            //->disabled(! auth()->user()->can('EsAdmin')),
                         Forms\Components\DatePicker::make('fecha_digitadora')
                             ->hidden()
                             ->native(false),

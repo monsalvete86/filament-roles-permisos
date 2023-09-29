@@ -60,7 +60,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            //->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->navigationGroups([
                 'Configuración del Sistema',
             ]);
