@@ -12,7 +12,9 @@ class ListUsers extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        if (auth()->user()->can('Crear roles')){
+        // $usuario = auth()->user()->hasRole('admin');
+        // dump($usuario);
+        if (auth()->user()->can('EsAdmin')){
             return [
                 Actions\CreateAction::make(),
             ];

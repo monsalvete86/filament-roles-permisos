@@ -18,9 +18,13 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+use App\Models\Permission;
 
 class AdminPanelProvider extends PanelProvider
 {
+
+    protected static ?string $navigationGroup = 'Configuración del Sistema';
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -56,6 +60,9 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->plugin(FilamentSpatieRolesPermissionsPlugin::make());
+            //->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            ->navigationGroups([
+                'Configuración del Sistema',
+            ]);
     }
 }

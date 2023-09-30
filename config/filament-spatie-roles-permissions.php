@@ -6,7 +6,7 @@ return [
 
     'preload_permissions' => true,
 
-    'navigation_section_group' => 'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
+    'navigation_section_group' => 'Configuración del Sistema', // Default uses language constant
 
     'team_model' => \App\Models\Team::class,
 
