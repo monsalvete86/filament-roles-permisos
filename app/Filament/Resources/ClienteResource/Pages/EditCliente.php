@@ -14,7 +14,7 @@ class EditCliente extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-                ->hidden(! auth()->user()->can('EsAdmin')),
+                ->hidden(! auth()->user()->can('EsDigitador')),
         ];
     }
     protected function getRedirectUrl(): string
