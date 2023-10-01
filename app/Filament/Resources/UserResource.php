@@ -42,18 +42,6 @@ class UserResource extends Resource
 							->dehydrateStateUsing(fn ($state) => Hash::make($state))
 							->dehydrated(fn ($state) => filled($state))
 							->required(fn (string $context): bool => $context === 'create'),
-						Forms\Components\TextInput::make('digitador')
-							->hidden()
-							->label('Digitador')
-							->maxLength(255),
-						Forms\Components\TextInput::make('benefit')
-							->hidden()
-							->label('Benefit')
-							->maxLength(255),
-						Forms\Components\TextInput::make('procesador')
-							->hidden()
-							->label('Procesador')
-							->maxLength(255),
 						Forms\Components\Select::make('roles')
 							->label('Rol')
 							->required()

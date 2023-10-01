@@ -20,6 +20,8 @@ class EstadoMigratorioResource extends Resource
     protected static ?string $model = EstadoMigratorio::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-globe-americas';
+    
+    protected static ?string $navigationGroup = 'Configuración del Sistema';
 
     protected static ?int $navigationSort = 1;
 

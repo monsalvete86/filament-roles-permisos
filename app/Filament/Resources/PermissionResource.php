@@ -29,8 +29,16 @@ class PermissionResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('guard_name')
+                    ->default('web')
+                    ->disabled()
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('roles')
+                    ->label('Roles')
+                    ->required()
+                    ->multiple()
+                    ->searchable()
+                    ->relationship('roles', 'name'),
             ]);
     }
 

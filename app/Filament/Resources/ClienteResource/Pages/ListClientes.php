@@ -12,7 +12,7 @@ class ListClientes extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        if (auth()->user()->can('EsDigitador')){
+        if (auth()->user()->hasRole(['digitador', 'admin'])){
             return [
                 Actions\CreateAction::make(),
             ];

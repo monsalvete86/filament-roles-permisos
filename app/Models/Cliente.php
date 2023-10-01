@@ -56,6 +56,7 @@ class Cliente extends Model
         'nota_benefit',
         'nota_procesador',
         'nota_digitadora',
+        'documento_migratorio',
     ];
 
     public function estado(): BelongsTo
