@@ -46,7 +46,7 @@ class DependienteResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required(),
-                    ])->columns(4)
+                    ])->columns(3)
             ]);
     }
 
