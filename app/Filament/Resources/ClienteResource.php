@@ -301,8 +301,7 @@ class ClienteResource extends Resource
                                             ->schema([
                                                 TextInput::make('nombre')
                                                     ->required()
-                                                    ->maxLength(255)
-                                                    ->columnSpan(['sm' => 4, 'md' => 2]),
+                                                    ->maxLength(255),
                                                 Radio::make('aplica_cobertura')
                                                     ->required()
                                                     ->boolean()
