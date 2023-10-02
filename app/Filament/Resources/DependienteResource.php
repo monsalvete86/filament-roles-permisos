@@ -27,19 +27,19 @@ class DependienteResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                        Forms\Components\TextInput::make('nombre')
+                        Forms\Components\TextInput::make('nombre_dependiente')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\Radio::make('aplica_cobertura')
+                        Forms\Components\Radio::make('aplica_cobertura_dependiente')
                             ->required()
                             ->boolean()
                             ->columns(2),
-                        Forms\Components\Select::make('estado_migratorio_id')
-                            ->relationship('estado_migratorio', 'nombre')
+                        Forms\Components\Select::make('estado_migratorio_dependiente_id')
+                            ->relationship('estado_migratorio_dependiente', 'nombre')
                             ->searchable()
                             ->preload()
                             ->required(),
-                        Forms\Components\DatePicker::make('fec_nac')
+                        Forms\Components\DatePicker::make('fec_nac_dependiente')
                             ->native(false),
                         Forms\Components\Select::make('cliente_id')
                             ->relationship('cliente', 'nombre1')
@@ -55,13 +55,13 @@ class DependienteResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id'),
-                TextColumn::make('nombre')
+                TextColumn::make('nombre_dependiente')
                     ->searchable(),
-                TextColumn::make('aplica_cobertura')
+                TextColumn::make('aplica_cobertura_dependiente')
                     ->searchable(),
-                TextColumn::make('estado_migratorio.nombre')
+                TextColumn::make('estado_migratorio_dependiente.nombre')
                     ->searchable(),
-                TextColumn::make('fec_nac')
+                TextColumn::make('fec_nac_dependiente')
                     ->searchable(),
                 TextColumn::make('cliente.nombre1')
                     ->searchable(),

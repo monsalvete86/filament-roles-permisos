@@ -18,19 +18,19 @@ class DependientesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nombre')
+                Forms\Components\TextInput::make('nombre_dependiente')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Radio::make('aplica_cobertura')
+                Forms\Components\Radio::make('aplica_cobertura_dependiente')
                     ->required()
                     ->boolean()
                     ->columns(2),
-                Forms\Components\Select::make('estado_migratorio_id')
-                    ->relationship('estado_migratorio', 'nombre')
+                Forms\Components\Select::make('estado_migratorio_dependiente_id')
+                    ->relationship('estado_migratorio_dependiente', 'nombre')
                     ->searchable()
                     ->preload()
                     ->required(),
-                Forms\Components\DatePicker::make('fec_nac')
+                Forms\Components\DatePicker::make('fec_nac_dependiente')
                     ->native(false),
                 Forms\Components\Select::make('cliente_id')
                     ->relationship('cliente', 'nombre1')
@@ -46,10 +46,10 @@ class DependientesRelationManager extends RelationManager
             ->recordTitleAttribute('nombre')
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('nombre'),
-                Tables\Columns\TextColumn::make('aplica_cobertura'),
-                Tables\Columns\TextColumn::make('estado_migratorio.codigo'),
-                Tables\Columns\TextColumn::make('fec_nac'),
+                Tables\Columns\TextColumn::make('nombre_dependiente'),
+                Tables\Columns\TextColumn::make('aplica_cobertura_dependiente'),
+                Tables\Columns\TextColumn::make('estado_migratorio_dependiente.nombre'),
+                Tables\Columns\TextColumn::make('fec_nac_dependiente'),
                 Tables\Columns\TextColumn::make('cliente.nombre1'),
             ])
             ->filters([

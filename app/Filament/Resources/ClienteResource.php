@@ -183,9 +183,9 @@ class ClienteResource extends Resource
                                         if (auth()->user()->hasRole(['benefit'])) return true;
                                         return false;
                                     })
-                                    ->disabled($disabled)
-                                    ->preload()
-                                    ->required(),
+                                    ->disabled($disabled),
+                                    //->preload()
+                                    //->required(),
                                 TextInput::make('documento_migratorio')
                                     ->hidden(auth()->user()->hasRole(['benefit']))
                                     ->disabled($disabled)
@@ -199,7 +199,7 @@ class ClienteResource extends Resource
                                     ])
                                     ->hidden(auth()->user()->hasRole(['benefit']))
                                     ->disabled($disabled)
-                                    ->required()
+                                    //->required()
                                     ->default('1099')
                                     ->native(false),
                                 Select::make('estado_civil_conyugue')
@@ -211,7 +211,7 @@ class ClienteResource extends Resource
                                     ])
                                     ->hidden(auth()->user()->hasRole(['benefit']))
                                     ->disabled($disabled)
-                                    ->required()
+
                                     ->native(false),
                                 TextInput::make('nombre_conyugue')
                                     // ->hidden(!auth()->user()->can('EsDigitador') OR
@@ -272,7 +272,6 @@ class ClienteResource extends Resource
                                         'Cancelado' => 'Cancelado',
                                         'Retirado' => 'Retirado',
                                     ])
-                                    ->required()
                                     ->native(false)
                                     ->hidden(! auth()->user()->hasRole(['admin'])),
                                 DatePicker::make('fecha_digitadora')
@@ -300,20 +299,20 @@ class ClienteResource extends Resource
                                     ->schema([
                                         Section::make()
                                             ->schema([
-                                                TextInput::make('nombre')
+                                                TextInput::make('nombre_dependiente')
                                                     ->required()
                                                     ->maxLength(255),
-                                                Radio::make('aplica_cobertura')
+                                                Radio::make('aplica_cobertura_dependiente')
                                                     ->required()
                                                     ->boolean()
                                                     ->columns(2),
-                                                Select::make('estado_migratorio_id')
+                                                Select::make('estado_migratorio_dependiente_id')
                                                     ->label('Estado Migratorio')
-                                                    ->relationship('estado_migratorio', 'nombre')
+                                                    ->relationship('estado_migratorio_dependiente', 'nombre')
                                                     ->searchable()
                                                     ->preload()
                                                     ->required(),
-                                                DatePicker::make('fec_nac')
+                                                DatePicker::make('fec_nac_dependiente')
                                                     ->label('Fecha de Nacimiento')
                                                     ->native(false)
                                             ])

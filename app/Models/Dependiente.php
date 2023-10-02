@@ -11,10 +11,10 @@ class Dependiente extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nombre',
-        'aplica_cobertura',
-        'estado_migratorio_id',
-        'fec_nac',
+        'nombre_dependiente',
+        'aplica_cobertura_dependiente',
+        'estado_migratorio_dependiente_id',
+        'fec_nac_dependiente',
         'cliente_id',
     ];
 
@@ -23,9 +23,9 @@ class Dependiente extends Model
         return $this->belongsTo(Cliente::class);
     }
 
-    public function estado_migratorio(): BelongsTo
+    public function estado_migratorio_dependiente(): BelongsTo
     {
-        return $this->belongsTo(EstadoMigratorio::class, 'estado_migratorio_id');
+        return $this->belongsTo(EstadoMigratorio::class, 'estado_migratorio_dependiente_id');
     }
 
 }
