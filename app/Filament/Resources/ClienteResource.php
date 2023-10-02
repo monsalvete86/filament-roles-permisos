@@ -176,7 +176,7 @@ class ClienteResource extends Resource
                         if ($get('personas_aseguradas') && $get('personas_aseguradas') != '') {
                             return [
                                 Select::make('estado_migratorio_id')
-                                    ->relationship('estado_migratorio', 'codigo')
+                                    ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
