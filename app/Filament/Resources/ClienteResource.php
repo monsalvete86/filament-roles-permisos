@@ -19,6 +19,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,7 +45,6 @@ class ClienteResource extends Resource
 
         $disabled = ! auth()->user()->can('editarCliente') && $edit ? true : false;
 
-
         $schemas = [
             Section::make('Datos Principales')
                 ->schema([
@@ -58,9 +58,8 @@ class ClienteResource extends Resource
                         ->hidden(auth()->user()->hasRole(['benefit']))
                         ->disabled($disabled)
                         ->email()
-                        ->required(),
-                    TextInput::make('nombre1')
-                        ->helperText('Nombre del asegurado principal iniciales con mayúscula por favor')
+                        ->required(),        
+                    TextInput::make('nombre1')                                    
                         ->disabled($disabled)
                         ->required()
                         ->maxLength(255),
@@ -68,7 +67,6 @@ class ClienteResource extends Resource
                         ->disabled($disabled)
                         ->maxLength(255),
                     TextInput::make('apellido1')
-                        ->helperText('Apellido del asegurado principal iniciales con mayúscula por favor')
                         ->disabled($disabled)
                         ->required()
                         ->maxLength(255),
@@ -76,23 +74,19 @@ class ClienteResource extends Resource
                         ->disabled($disabled)
                         ->maxLength(255),
                     Radio::make('aplica_cobertura')
-                        ->helperText('Aplica para cobertura?')
                         ->hidden(auth()->user()->hasRole(['benefit']))
                         ->disabled($disabled)
                         ->required()
                         ->boolean()
                         ->columns(2),
                     DatePicker::make('fec_nac')
-                        ->helperText('Ingrese la fecha de nacimiento, campo obligatorio')
                         ->label('Fecha Nacimiento')
                         ->disabled($disabled)
                         ->native(false),
                     TextInput::make('direccion')
-                        ->helperText('Incluya la dirección lo más clara posible, no ingrese ciudad ni estado en este campo')
                         ->disabled($disabled)
                         ->maxValue(50),
                     Select::make('codigopostal')
-                        ->helperText('Ingrese el codigo postal')
                         ->searchable()
                         ->options(fn (Get $get): Collection => $get('estado_id') ?
                             Estado::all()
@@ -157,35 +151,7 @@ class ClienteResource extends Resource
                         ->preload()
                         ->label('Ciudad')
                         ->required(),
-                    Select::make('estado_migratorio_id')
-                        ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
-                        ->relationship('estado_migratorio', 'nombre')
-                        ->searchable()
-                        ->hidden(function (Get $get) {
-                            if (auth()->user()->hasRole(['benefit'])) { return true; }
-                            return false;
-                        })
-                        ->disabled($disabled)
-                        ->preload()
-                        ->required(),
-                    TextInput::make('documento_migratorio')
-                        ->hidden(auth()->user()->hasRole(['benefit']))
-                        ->disabled($disabled)
-                        ->label('Documento Migratorio')
-                        ->type('number')
-                        ->helperText('Si esta en proceso migratorio que documento tiene'),
-                    Select::make('tipo_trabajo')
-                        ->options([
-                            '1099' => '1099',
-                            'W2' => 'W2',
-                        ])
-                        ->hidden(auth()->user()->hasRole(['benefit']))
-                        ->disabled($disabled)
-                        ->required()
-                        ->default('1099')
-                        ->native(false),
                     Select::make('personas_aseguradas')
-                        ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                         ->options([
                             'Solo' => 'Solo',
                             'Conyugue' => 'Conyugue',
@@ -200,15 +166,41 @@ class ClienteResource extends Resource
                 ])
                 ->collapsible()
                 ->columns(4),
-            Section::make('Datos Socio_Economicos')
+            Section::make('Datos a Consultar')
                 ->schema(
                     function (Get $get) {
-                        $edit = isset($form->model->exists) ;
                         $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin']);
                         $disabled = ! auth()->user()->can('editarCliente') && $edit ? true : false;
 
                         if ($get('personas_aseguradas') && $get('personas_aseguradas') != '') {
                             return [
+                                Select::make('estado_migratorio_id')
+                                    ->relationship('estado_migratorio', 'codigo')
+                                    ->searchable()
+                                    ->hidden(function (Get $get) {
+                                        if (! $get('personas_aseguradas')) { return true; }
+                                        if (auth()->user()->hasRole(['benefit'])) return true;
+                                        return false;
+                                    })
+                                    ->disabled($disabled)
+                                    ->preload()
+                                    ->required(),
+                                TextInput::make('documento_migratorio')
+                                    ->hidden(auth()->user()->hasRole(['benefit']))
+                                    ->disabled($disabled)
+                                    ->label('Documento Migratorio')
+                                    ->type('number')
+                                    ->helperText('Si esta en proceso migratorio que documento tiene'),
+                                Select::make('tipo_trabajo')
+                                    ->options([
+                                        '1099' => '1099',
+                                        'W2' => 'W2',
+                                    ])
+                                    ->hidden(auth()->user()->hasRole(['benefit']))
+                                    ->disabled($disabled)
+                                    ->required()
+                                    ->default('1099')
+                                    ->native(false),
                                 Select::make('estado_civil_conyugue')
                                     ->options([
                                         'Soltero' => 'Soltero',
@@ -266,8 +258,8 @@ class ClienteResource extends Resource
                                     ->placeholder('Ingrese el total de ingresos GF'),
                                 //Hidden::make('estado_cliente') placeholder
                                 Hidden::make('estado_cliente')
-                                    ->default('digitado'),
-                                    // ->hidden(! auth()->user()->can('EsBenefit'))
+                                    ->default('digitado')
+                                    ->hidden(! auth()->user()->hasRole('admin')),
                                     // ->required()
                                     // ->maxValue(50),
                                 Select::make('digitador.digitador')
@@ -281,13 +273,13 @@ class ClienteResource extends Resource
                                     ])
                                     ->required()
                                     ->native(false)
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'procesador', 'admin'])),
+                                    ->hidden(! auth()->user()->hasRole(['admin'])),
                                 DatePicker::make('fecha_digitadora')
                                     ->hidden()
                                     ->native(false),
                                 TextInput::make('benefit.benefit')
                                     ->hidden()
-                                    ->disabled(! auth()->user()->hasRole(['digitador', 'procesador', 'admin'])),
+                                    ->disabled(! auth()->user()->hasRole(['admin'])),
                                 DatePicker::make('fecha_benefit')
                                     ->hidden()
                                     ->native(false),
@@ -296,12 +288,37 @@ class ClienteResource extends Resource
                                     ->searchable()
                                     ->preload()
                                     ->live()
-                                    ->hidden(auth()->user()->hasRole(['benefit']))
+                                    ->hidden(!auth()->user()->hasRole(['benefit']))
                                     ->disabled($disabled),
                                     //->required(),
                                 TextInput::make('procesador.procesador')
-                                    //->hidden()
-                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    ->hidden(!auth()->user()->hasRole(['admin']))
+                                    ->disabled(! auth()->user()->hasRole(['admin'])),
+                                Repeater::make('dependientes')
+                                    ->relationship()
+                                    ->schema([
+                                        Section::make()
+                                            ->schema([
+                                                TextInput::make('nombre')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                                Radio::make('aplica_cobertura')
+                                                    ->required()
+                                                    ->boolean()
+                                                    ->columns(2),
+                                                Select::make('estado_migratorio_id')
+                                                    ->label('Estado Migratorio')
+                                                    ->relationship('estado_migratorio', 'codigo')
+                                                    ->searchable()
+                                                    ->preload()
+                                                    ->required(),
+                                                DatePicker::make('fec_nac')
+                                                    ->label('Fecha de Nacimiento')
+                                                    ->native(false)
+                                            ])
+                                            ->columns(4),
+                                    ])
+                                    ->columnSpan(4),
                             ];
                         }
 
@@ -312,94 +329,132 @@ class ClienteResource extends Resource
                 ->columns(4)
         ];
 
-        if (auth()->user()->hasRole([' ', 'admin'])) {
-            array_push(
-                $schemas,
-                Section::make('Cobertura Vigente')
-                    ->schema([
-                        TextInput::make('agente')
-                            ->disabled(! auth()->user()->can('EsBenefit'))
-                            ->maxLength(255),
-                        DatePicker::make('inicio_cobertura')
-                            ->disabled(! auth()->user()->can('EsBenefit'))
-                            ->native(false),
-                            //->required(),
-                        DatePicker::make('fin_cobertura')
-                            ->disabled(! auth()->user()->can('EsBenefit'))
-                            ->native(false),
-                            //->required(),
-                        DatePicker::make('inicio_cobertura_vig')
-                            ->disabled(! auth()->user()->can('EsBenefit'))
-                            ->native(false),
-                            //->required(),
-                        DatePicker::make('fin_cobertura_vig')
-                            ->disabled(! auth()->user()->can('EsBenefit'))
-                            ->native(false),
-                            //->required(),
-                    ])
-                    ->collapsible()
-                    ->columns(4)
-            );
+        if (function (Get $get) {
+                if ($get('personas_aseguradas')) return true;
+                 return false;
+            }
+        )
+        {
+            function (Get $get) {
+                $variable = $get('personas_aseguradas');
+                dump($variable);
+            };
+        }
 
-            array_push(
-                $schemas,
-                Section::make('Cobertura Anterior')
-                    ->schema(
-                        function (Get $get) {
-                            if ( auth()->user()->hasRole(['benefit', 'admin'])) {
-                                return [
-                                    Select::make('cobertura_ant')
-                                        ->disabled(! auth()->user()->can('EsBenefit'))
-                                        //->hidden(! auth()->user()->can('EsBenfit'))
-                                        ->options([
-                                            'Si' => 'Si',
-                                            'No' => 'No',
-                                            'Xinfo' => 'Xinfo',
-                                        ])
-                                        ->native(false),
-                                    TextInput::make('codigo_anterior')
-                                        ->hidden(! auth()->user()->hasRole(['digitador', 'procesador', 'admin']))
-                                        ->label('Código anterior')
-                                        ->type('number')
-                                        ->placeholder('Ingrese el código anterior'),
-                                    TextInput::make('ultimo_agente')
-                                        ->disabled(! auth()->user()->can('EsBenefit'))
-                                        ->maxLength(255),
-                                    DatePicker::make('fecha_retiro')
-                                        ->disabled(! auth()->user()->can('EsBenefit'))
-                                        ->native(false),
-                                    DatePicker::make('fecha_retiro_cobertura_ant')
-                                        ->disabled(! auth()->user()->can('EsBenefit'))
-                                        ->native(false),
-                                        //->required(),
-                                ];
-                            }
-
-                            return [];
+        if (auth()->user()->hasRole(['benefit', 'admin'])) {
+            array_push($schemas, Section::make('Cobertura Anterior')
+                ->schema(
+                    function (Get $get) {
+                        if ( auth()->user()->hasRole(['benefit', 'admin'])) {
+                            return [
+                                Select::make('cobertura_ant')
+                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    //->hidden(! auth()->user()->can('EsBenfit'))
+                                    ->options([
+                                        'Si' => 'Si',
+                                        'No' => 'No',
+                                        'Xinfo' => 'Xinfo',
+                                    ])
+                                    ->native(false),
+                                TextInput::make('codigo_anterior')
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'procesador', 'admin']))
+                                    ->label('Código anterior')
+                                    ->type('number')
+                                    ->placeholder('Ingrese el código anterior'),
+                                TextInput::make('ultimo_agente')
+                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    ->maxLength(255),
+                                DatePicker::make('fecha_retiro')
+                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    ->native(false),
+                                DatePicker::make('fecha_retiro_cobertura_ant')
+                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    ->native(false),
+                                    //->required(),
+                            ];
                         }
-                    )
-                    ->collapsible()
-                    ->columns(4)
+
+                        return [];
+                    }
+                )
+                ->collapsible()
+                ->columns(4)
+            );
+            array_push($schemas, Section::make('Cobertura Vigente')
+                ->schema(
+                    function (Get $get) {
+                        if ( auth()->user()->hasRole(['benefit', 'admin'])) {
+                            return [
+                                TextInput::make('agente')
+                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    ->maxLength(255),
+                                Radio::make('aplica_covertura_conyugue')
+                                    ->hidden(auth()->user()->hasRole(['benefit']))
+                                    ->disabled($disabled)
+                                    ->boolean()
+                                    ->required()
+                                    ->columns(2),
+                                Radio::make('dependientes_fuera_pareja')
+                                    ->hidden(auth()->user()->hasRole(['benefit']))
+                                    ->disabled($disabled)
+                                    ->boolean()
+                                    ->required()
+                                    ->columns(2),
+                                Select::make('quien_aporta_ingresos')
+                                    ->options([
+                                        'Solo' => 'Solo',
+                                        'Conyugue' => 'Conyugue',
+                                        'Juntos' => 'Juntos',
+                                    ])
+                                    ->hidden(auth()->user()->hasRole(['benefit']))
+                                    ->disabled($disabled)
+                                    ->required()
+                                    ->native(false),
+                                Select::make('quien_declara_taxes')
+                                    ->options([
+                                        'Solo' => 'Solo',
+                                        'Conyugue' => 'Conyugue',
+                                        'Juntos' => 'Juntos',
+                                    ])
+                                    ->hidden(auth()->user()->hasRole(['benefit']))
+                                    ->disabled($disabled)
+                                    ->required()
+                                    ->native(false),
+                                    //->required(),
+                                DatePicker::make('inicio_cobertura_vig')
+                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    ->native(false),
+                                    //->required(),
+                                DatePicker::make('fin_cobertura_vig')
+                                    ->disabled(! auth()->user()->can('EsBenefit'))
+                                    ->native(false),
+                                    //->required(),
+                            ];
+                        }
+
+                        return [];
+                    }
+                )
+                ->collapsible()
+                ->columns(4)
             );
         }
 
-        array_push(
-            $schemas,
-            Section::make('Datos Adicionales')
-                ->schema([
-                    TextInput::make('image')
-                        ->disabled(! auth()->user()->can('EsBenefit'))
-                        ->url()
-                        ->suffixIcon('heroicon-m-globe-alt'),
-                    Textarea::make('nota_benefit')
-                        ->disabled(! auth()->user()->can('EsBenefit')),
-                    Textarea::make('nota_procesador')
-                        ->hidden(! auth()->user()->can('EsProcesador')),
-                    Textarea::make('nota_digitadora')
-                        ->hidden(! auth()->user()->hasRole(['digitador', 'procesador', 'admin'])),
-                ])
-                ->collapsible()
-                ->columns(4),
+        array_push($schemas, Section::make('Datos Adicionales')
+            ->schema([
+                TextInput::make('image')
+                    ->disabled(! auth()->user()->can('EsBenefit'))
+                    ->url()
+                    ->suffixIcon('heroicon-m-globe-alt'),
+                Forms\Components\Textarea::make('nota_benefit')
+                    ->disabled(! auth()->user()->can('EsBenefit')),
+                Forms\Components\Textarea::make('nota_procesador')
+                    ->hidden(! auth()->user()->can('EsProcesador')),
+                Forms\Components\Textarea::make('nota_digitadora')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'procesador', 'admin'])),
+            ])
+            ->collapsible()
+            ->columns(4)
         );
 
         return $form
