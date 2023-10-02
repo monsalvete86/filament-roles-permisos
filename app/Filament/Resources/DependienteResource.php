@@ -35,7 +35,7 @@ class DependienteResource extends Resource
                             ->boolean()
                             ->columns(2),
                         Forms\Components\Select::make('estado_migratorio_id')
-                            ->relationship('estado_migratorio', 'codigo')
+                            ->relationship('estado_migratorio', 'nombre')
                             ->searchable()
                             ->preload()
                             ->required(),
@@ -59,7 +59,7 @@ class DependienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('aplica_cobertura')
                     ->searchable(),
-                TextColumn::make('estado_migratorio.codigo')
+                TextColumn::make('estado_migratorio.nombre')
                     ->searchable(),
                 TextColumn::make('fec_nac')
                     ->searchable(),

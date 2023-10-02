@@ -26,6 +26,7 @@ class Cliente extends Model
         'condado_id',
         'ciudad_id',
         'estado_migratorio_id',
+        'documento_migratorio',
         'tipo_trabajo',
         'personas_aseguradas',
         'estado_civil_conyugue',

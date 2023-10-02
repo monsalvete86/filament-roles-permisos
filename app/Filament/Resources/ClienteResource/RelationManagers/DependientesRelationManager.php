@@ -26,7 +26,7 @@ class DependientesRelationManager extends RelationManager
                     ->boolean()
                     ->columns(2),
                 Forms\Components\Select::make('estado_migratorio_id')
-                    ->relationship('estado_migratorio', 'codigo')
+                    ->relationship('estado_migratorio', 'nombre')
                     ->searchable()
                     ->preload()
                     ->required(),

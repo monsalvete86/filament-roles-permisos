@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreignId('condado_id')->constrained('condados')->cascadeOnDelete();
             $table->foreignId('ciudad_id')->constrained('ciudads')->cascadeOnDelete();
             $table->foreignId('estado_migratorio_id')->constrained('estado_migratorios')->cascadeOnDelete();
+            $table->string('documento_migratorio')->nullable();
             $table->string('tipo_trabajo');
             $table->string('personas_aseguradas');
             $table->string('estado_civil_conyugue')->nullable();

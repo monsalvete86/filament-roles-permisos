@@ -58,8 +58,8 @@ class ClienteResource extends Resource
                         ->hidden(auth()->user()->hasRole(['benefit']))
                         ->disabled($disabled)
                         ->email()
-                        ->required(),        
-                    TextInput::make('nombre1')                                    
+                        ->required(),
+                    TextInput::make('nombre1')
                         ->disabled($disabled)
                         ->required()
                         ->maxLength(255),
@@ -103,7 +103,7 @@ class ClienteResource extends Resource
                         ->required()
                         ->hidden(auth()->user()->hasRole(['benefit']))
                         ->disabled($disabled)
-                        ->afterStateUpdated(function (Set $set, Get $get) { 
+                        ->afterStateUpdated(function (Set $set, Get $get) {
                             $set('ciudad_id', null);
                             if ($get('codigopostal'))
                             {
@@ -117,7 +117,7 @@ class ClienteResource extends Resource
                         ->disabled($disabled)
                         ->preload()
                         ->live()
-                        ->afterStateUpdated(function (Set $set, Get $get) { 
+                        ->afterStateUpdated(function (Set $set, Get $get) {
                             $set('condado_id', null);
                             if ($get('estado_id') != '')
                             {
@@ -169,6 +169,7 @@ class ClienteResource extends Resource
             Section::make('Datos a Consultar')
                 ->schema(
                     function (Get $get) {
+                        $edit = isset($form->model->exists) ;
                         $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin']);
                         $disabled = ! auth()->user()->can('editarCliente') && $edit ? true : false;
 
@@ -308,7 +309,7 @@ class ClienteResource extends Resource
                                                     ->columns(2),
                                                 Select::make('estado_migratorio_id')
                                                     ->label('Estado Migratorio')
-                                                    ->relationship('estado_migratorio', 'codigo')
+                                                    ->relationship('estado_migratorio', 'nombre')
                                                     ->searchable()
                                                     ->preload()
                                                     ->required(),
@@ -327,7 +328,7 @@ class ClienteResource extends Resource
                 )
                 ->collapsible()
                 ->columns(4)
-        ];
+            ];
 
         if (function (Get $get) {
                 if ($get('personas_aseguradas')) return true;
@@ -390,13 +391,11 @@ class ClienteResource extends Resource
                                     ->maxLength(255),
                                 Radio::make('aplica_covertura_conyugue')
                                     ->hidden(auth()->user()->hasRole(['benefit']))
-                                    ->disabled($disabled)
                                     ->boolean()
                                     ->required()
                                     ->columns(2),
                                 Radio::make('dependientes_fuera_pareja')
                                     ->hidden(auth()->user()->hasRole(['benefit']))
-                                    ->disabled($disabled)
                                     ->boolean()
                                     ->required()
                                     ->columns(2),
@@ -406,8 +405,6 @@ class ClienteResource extends Resource
                                         'Conyugue' => 'Conyugue',
                                         'Juntos' => 'Juntos',
                                     ])
-                                    ->hidden(auth()->user()->hasRole(['benefit']))
-                                    ->disabled($disabled)
                                     ->required()
                                     ->native(false),
                                 Select::make('quien_declara_taxes')
@@ -417,16 +414,13 @@ class ClienteResource extends Resource
                                         'Juntos' => 'Juntos',
                                     ])
                                     ->hidden(auth()->user()->hasRole(['benefit']))
-                                    ->disabled($disabled)
                                     ->required()
                                     ->native(false),
                                     //->required(),
                                 DatePicker::make('inicio_cobertura_vig')
-                                    ->disabled(! auth()->user()->can('EsBenefit'))
                                     ->native(false),
                                     //->required(),
                                 DatePicker::make('fin_cobertura_vig')
-                                    ->disabled(! auth()->user()->can('EsBenefit'))
                                     ->native(false),
                                     //->required(),
                             ];
@@ -495,7 +489,7 @@ class ClienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('ciudad.nombre')
                     ->searchable(),
-                TextColumn::make('estado_migratorio.codigo')
+                TextColumn::make('estado_migratorio.nombre')
                     ->searchable(),
                 TextColumn::make('tipo_trabajo')
                     ->searchable(),
