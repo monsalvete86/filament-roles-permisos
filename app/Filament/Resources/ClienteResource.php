@@ -60,6 +60,7 @@ class ClienteResource extends Resource
                         ->email()
                         ->required(),
                     TextInput::make('nombre1')
+                        ->helperText('Nombre del asegurado principal iniciales con mayúscula por favor')
                         ->disabled($disabled)
                         ->required()
                         ->maxLength(255),
@@ -69,6 +70,7 @@ class ClienteResource extends Resource
                     TextInput::make('apellido1')
                         ->disabled($disabled)
                         ->required()
+                        ->helperText('Apellido del asegurado principal iniciales con mayúscula por favor')
                         ->maxLength(255),
                     TextInput::make('apellido2')
                         ->disabled($disabled)
@@ -78,16 +80,20 @@ class ClienteResource extends Resource
                         ->disabled($disabled)
                         ->required()
                         ->boolean()
+                        ->helperText('Aplica para cobertura?')
                         ->columns(2),
                     DatePicker::make('fec_nac')
                         ->label('Fecha Nacimiento')
                         ->disabled($disabled)
+                        ->helperText('Ingrese la fecha de nacimiento, campo obligatorio')
                         ->native(false),
                     TextInput::make('direccion')
                         ->disabled($disabled)
+                        ->helperText('Incluya la dirección lo más clara posible, no ingrese ciudad ni estado en este campo')
                         ->maxValue(50),
                     Select::make('codigopostal')
                         ->searchable()
+                        ->helperText('Ingrese el codigo postal')
                         ->options(fn (Get $get): Collection => $get('estado_id') ?
                             Estado::all()
                                 ->where('id', $get('estado_id'))
@@ -159,6 +165,7 @@ class ClienteResource extends Resource
                             'Conyugue y Dependientes' => 'C&D',
                         ])
                         ->hidden(auth()->user()->hasRole(['benefit']))
+                        ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                         ->disabled($disabled)
                         ->live(onBlur: true)
                         ->required()
@@ -178,6 +185,7 @@ class ClienteResource extends Resource
                                 Select::make('estado_migratorio_id')
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
+                                    ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
                                         if (auth()->user()->hasRole(['benefit'])) return true;
@@ -193,6 +201,7 @@ class ClienteResource extends Resource
                                     ->type('number')
                                     ->helperText('Si esta en proceso migratorio que documento tiene'),
                                 Select::make('tipo_trabajo')
+                                    ->helperText('Tipo de trabajo W2 o 1099')
                                     ->options([
                                         '1099' => '1099',
                                         'W2' => 'W2',
@@ -232,6 +241,7 @@ class ClienteResource extends Resource
                                     ->required()
                                     ->columns(2),
                                 Select::make('quien_aporta_ingresos')
+                                    ->helperText('Quíen aporta los ingresos del hogar?')
                                     ->options([
                                         'Solo' => 'Solo',
                                         'Conyugue' => 'Conyugue',
@@ -242,6 +252,7 @@ class ClienteResource extends Resource
                                     ->required()
                                     ->native(false),
                                 Select::make('quien_declara_taxes')
+                                    ->helperText('Como declara los impuestos (Taxes)?')
                                     ->options([
                                         'Solo' => 'Solo',
                                         'Conyugue' => 'Conyugue',
@@ -256,7 +267,7 @@ class ClienteResource extends Resource
                                     ->disabled($disabled)
                                     ->label('Total ingresos gf')
                                     ->type('number')
-                                    ->placeholder('Ingrese el total de ingresos GF'),
+                                    ->placeholder('Total ingresos del grupo familiar'),
                                 //Hidden::make('estado_cliente') placeholder
                                 Hidden::make('estado_cliente')
                                     ->default('digitado')
@@ -439,11 +450,14 @@ class ClienteResource extends Resource
                     ->disabled(! auth()->user()->can('EsBenefit'))
                     ->url()
                     ->suffixIcon('heroicon-m-globe-alt'),
-                Forms\Components\Textarea::make('nota_benefit')
+                Textarea::make('nota_benefit')
+                    ->helperText('Nota del benefit')
                     ->disabled(! auth()->user()->can('EsBenefit')),
-                Forms\Components\Textarea::make('nota_procesador')
+                Textarea::make('nota_procesador')
+                    ->helperText('Nota del procesador')
                     ->hidden(! auth()->user()->can('EsProcesador')),
-                Forms\Components\Textarea::make('nota_digitadora')
+                Textarea::make('nota_digitadora')
+                    ->helperText('Nota del digitador')
                     ->hidden(! auth()->user()->hasRole(['digitador', 'procesador', 'admin'])),
             ])
             ->collapsible()
