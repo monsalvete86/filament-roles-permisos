@@ -40,6 +40,7 @@ return new class extends Migration
             $table->float('total_ingresos_gf')->nullable();
             $table->string('estado_cliente')->nullable();
             $table->foreignId('digitador_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('fecha_digitadora')->nullable();
             $table->foreignId('benefit_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('fecha_benefit')->nullable();

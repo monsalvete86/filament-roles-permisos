@@ -58,6 +58,7 @@ class Cliente extends Model
         'nota_procesador',
         'nota_digitadora',
         'documento_migratorio',
+        'user_id',
     ];
 
     public function estado(): BelongsTo
@@ -87,21 +88,25 @@ class Cliente extends Model
 
     public function digitador(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'digitador_id');
+        return $this->belongsTo(User::class);
     }
 
     public function benefit(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'benefit_id');
+        return $this->belongsTo(User::class);
     }
 
     public function procesador(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'procesador_id');
+        return $this->belongsTo(User::class);
     }
 
     public function compania(): BelongsTo
     {
         return $this->belongsTo(Compania::class);
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -7,6 +7,7 @@ use Filament\Tables;
 use App\Models\Estado;
 use App\Models\Cliente;
 use App\Models\Condado;
+use App\Models\User;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
@@ -35,6 +36,13 @@ class ClienteResource extends Resource
     protected static ?string $model = Cliente::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['digitador_id'] = auth()->user()->id;
+
+        return $data;
+    }
 
     public static function form(Form $form): Form
     {
@@ -268,29 +276,34 @@ class ClienteResource extends Resource
                                     ->label('Total ingresos gf')
                                     ->type('number')
                                     ->placeholder('Total ingresos del grupo familiar'),
-                                //Hidden::make('estado_cliente') placeholder
                                 Hidden::make('estado_cliente')
                                     ->default('digitado')
                                     ->hidden(! auth()->user()->hasRole('admin')),
-                                    // ->required()
-                                    // ->maxValue(50),
-                                Select::make('digitador.digitador')
-                                    ->options([
-                                        'Digitado' => 'Digitado',
-                                        'Benefit' => 'Benefit',
-                                        'Pass' => 'Pass',
-                                        'Aceptado' => 'Aceptado',
-                                        'Cancelado' => 'Cancelado',
-                                        'Retirado' => 'Retirado',
-                                    ])
+                                Select::make('digitador')
+                                    ->options(fn (Get $get): Collection => User::all()
+                                        ->where('id', auth()->user()->id)
+                                        ->pluck('name' , 'digitadors')
+                                    )
+                                    ->disabled($disabled)
+                                    ->selectablePlaceholder(false)
+                                    ->preload()
+                                    ->live()
                                     ->native(false)
-                                    ->hidden(! auth()->user()->hasRole(['admin'])),
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin'])),
                                 DatePicker::make('fecha_digitadora')
                                     ->hidden()
                                     ->native(false),
-                                TextInput::make('benefit.benefit')
-                                    ->hidden()
-                                    ->disabled(! auth()->user()->hasRole(['admin'])),
+                                Select::make('benefit')
+                                    ->options(fn (Get $get): Collection => User::all()
+                                        ->where('id', auth()->user()->id)
+                                        ->pluck('name' , 'benefit')
+                                    )
+                                    ->disabled($disabled)
+                                    ->selectablePlaceholder(false)
+                                    ->preload()
+                                    ->live()
+                                    ->native(false)
+                                    ->hidden(! auth()->user()->hasRole(['benefit'])),
                                 DatePicker::make('fecha_benefit')
                                     ->hidden()
                                     ->native(false),
@@ -302,9 +315,17 @@ class ClienteResource extends Resource
                                     ->hidden(!auth()->user()->hasRole(['benefit']))
                                     ->disabled($disabled),
                                     //->required(),
-                                TextInput::make('procesador.procesador')
-                                    ->hidden(!auth()->user()->hasRole(['admin']))
-                                    ->disabled(! auth()->user()->hasRole(['admin'])),
+                                Select::make('procesador')
+                                    ->options(fn (Get $get): Collection => User::all()
+                                        ->where('id', auth()->user()->id)
+                                        ->pluck('name' , 'procesador')
+                                    )
+                                    ->disabled($disabled)
+                                    ->selectablePlaceholder(false)
+                                    ->preload()
+                                    ->live()
+                                    ->native(false)
+                                    ->hidden(! auth()->user()->hasRole(['procesador'])),
                                 Repeater::make('dependientes')
                                     ->relationship()
                                     ->schema([
