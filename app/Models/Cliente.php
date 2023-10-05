@@ -32,6 +32,7 @@ class Cliente extends Model
         'estado_civil_conyugue',
         'nombre_conyugue',
         'aplica_covertura_conyugue',
+        'fec_nac_conyugue',
         'dependientes_fuera_pareja',
         'quien_aporta_ingresos',
         'quien_declara_taxes',

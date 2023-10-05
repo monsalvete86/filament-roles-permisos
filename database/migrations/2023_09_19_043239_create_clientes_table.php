@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string('estado_civil_conyugue')->nullable();
             $table->string('nombre_conyugue')->nullable();
             $table->boolean('aplica_covertura_conyugue')->default(true);
+            $table->date('fec_nac_conyugue')->nullable();
             $table->boolean('dependientes_fuera_pareja')->default(true);
             $table->string('quien_aporta_ingresos')->nullable();
             $table->string('quien_declara_taxes')->nullable();
