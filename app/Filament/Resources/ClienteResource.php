@@ -142,7 +142,6 @@ class ClienteResource extends Resource
                             if ($get('estado_id') != '')
                             {
                                 $estado = Estado::where('id', $get('estado_id'))->first();
-                                // dump($codPostEstado->codigo_postal);
                                 if (isset($estado->codigo_postal)) $set('codigopostal', $estado->codigo_postal);
                             }
                         })
@@ -201,7 +200,7 @@ class ClienteResource extends Resource
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['benefit'])) return true;
+                                        if (auth()->user()->hasRole(['digitador', 'admin'])) return true;
                                         return false;
                                     })
                                     ->disabled($disabled),
@@ -292,7 +291,6 @@ class ClienteResource extends Resource
                             return [
                                 Select::make('estado_migratorio_id')
                                     ->label('Estado Migratorio')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
@@ -426,14 +424,13 @@ class ClienteResource extends Resource
                                     ->required()
                                     ->columns(2),
                                 Select::make('estado_migratorio_id')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->label('Estado Migratorio')
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['benefit'])) return true;
+                                        if (auth()->user()->hasRole(['digitador', 'admin'])) return true;
                                         return false;
                                     })
                                     ->disabled($disabled),
@@ -614,14 +611,13 @@ class ClienteResource extends Resource
                                     ])
                                     ->columnSpan(4),
                                 Select::make('estado_migratorio_id')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->label('Estado Migratorio')
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['benefit'])) return true;
+                                        if (auth()->user()->hasRole(['digitador', 'admin'])) return true;
                                         return false;
                                     })
                                     ->disabled($disabled),
