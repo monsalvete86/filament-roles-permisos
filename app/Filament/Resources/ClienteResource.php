@@ -196,6 +196,7 @@ class ClienteResource extends Resource
                             return [
                                 Select::make('estado_migratorio_id')
                                     ->relationship('estado_migratorio', 'nombre')
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->searchable()
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
@@ -290,6 +291,7 @@ class ClienteResource extends Resource
                         if ($get('personas_aseguradas') && $get('personas_aseguradas') === 'Solo') {
                             return [
                                 Select::make('estado_migratorio_id')
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->label('Estado Migratorio')
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
@@ -424,6 +426,7 @@ class ClienteResource extends Resource
                                     ->required()
                                     ->columns(2),
                                 Select::make('estado_migratorio_id')
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->label('Estado Migratorio')
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
@@ -611,6 +614,7 @@ class ClienteResource extends Resource
                                     ])
                                     ->columnSpan(4),
                                 Select::make('estado_migratorio_id')
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->label('Estado Migratorio')
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
