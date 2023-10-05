@@ -142,6 +142,7 @@ class ClienteResource extends Resource
                             if ($get('estado_id') != '')
                             {
                                 $estado = Estado::where('id', $get('estado_id'))->first();
+                                // dump($codPostEstado->codigo_postal);
                                 if (isset($estado->codigo_postal)) $set('codigopostal', $estado->codigo_postal);
                             }
                         })
@@ -291,14 +292,14 @@ class ClienteResource extends Resource
                         if ($get('personas_aseguradas') && $get('personas_aseguradas') === 'Solo') {
                             return [
                                 Select::make('estado_migratorio_id')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->label('Estado Migratorio')
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['digitador', 'admin'])) return true;
+                                        if (auth()->user()->hasRole(['admin'])) return true;
                                         return false;
                                     })
                                     ->disabled($disabled),
@@ -433,7 +434,7 @@ class ClienteResource extends Resource
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['digitador', 'admin'])) return true;
+                                        if (auth()->user()->hasRole(['admin'])) return true;
                                         return false;
                                     })
                                     ->disabled($disabled),
@@ -621,7 +622,7 @@ class ClienteResource extends Resource
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
                                     ->hidden(function (Get $get) {
                                         if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['digitador', 'admin'])) return true;
+                                        if (auth()->user()->hasRole(['admin'])) return true;
                                         return false;
                                     })
                                     ->disabled($disabled),
