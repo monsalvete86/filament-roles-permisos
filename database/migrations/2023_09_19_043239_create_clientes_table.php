@@ -29,7 +29,7 @@ return new class extends Migration
             $table->foreignId('ciudad_id')->constrained('ciudads')->cascadeOnDelete();
             $table->foreignId('estado_migratorio_id')->constrained('estado_migratorios')->cascadeOnDelete();
             $table->string('documento_migratorio')->nullable();
-            $table->string('tipo_trabajo');
+            $table->string('tipo_trabajo')->nullable();
             $table->string('personas_aseguradas');
             $table->string('estado_civil_conyugue')->nullable();
             $table->string('nombre_conyugue')->nullable();
@@ -38,6 +38,16 @@ return new class extends Migration
             $table->string('quien_aporta_ingresos')->nullable();
             $table->string('quien_declara_taxes')->nullable();
             $table->float('total_ingresos_gf')->nullable();
+            $table->string('compania_aseguradora')->nullable();
+            $table->string('plan_compania_aseguradora')->nullable();
+            $table->string('prima_mensual')->nullable();
+            $table->string('deducible')->nullable();
+            $table->string('maximo_bolsillo')->nullable();
+            $table->string('medicamento_generico')->nullable();
+            $table->string('medico_primario')->nullable();
+            $table->string('medico_especialista')->nullable();
+            $table->string('sala_emergencia')->nullable();
+            $table->string('subsidio')->nullable();
             $table->string('estado_cliente')->nullable();
             $table->foreignId('digitador_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
