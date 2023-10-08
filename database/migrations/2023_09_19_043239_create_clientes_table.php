@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('documento_migratorio')->nullable();
             $table->string('tipo_trabajo')->nullable();
             $table->string('personas_aseguradas');
+            $table->string('estado_migratorio_conyugue')->nullable();
             $table->string('estado_civil_conyugue')->nullable();
             $table->string('nombre_conyugue')->nullable();
             $table->boolean('aplica_covertura_conyugue')->default(true);
@@ -56,6 +57,7 @@ return new class extends Migration
             $table->foreignId('benefit_id')->constrained('users')->cascadeOnDelete();
             $table->timestamp('fecha_benefit')->nullable();
             $table->foreignId('procesador_id')->constrained('users')->cascadeOnDelete();
+            $table->timestamp('fecha_procesador')->nullable();
             $table->foreignId('compania_id')->constrained('companias')->cascadeOnDelete();
             $table->integer('codigo_anterior')->nullable();
             $table->string('cobertura_ant')->nullable();

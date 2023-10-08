@@ -8,6 +8,7 @@ use App\Models\Estado;
 use App\Models\Cliente;
 use App\Models\Condado;
 use App\Models\Compania;
+use App\Models\EstadoMigratorio;
 use App\Models\User;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -171,6 +172,14 @@ class ClienteResource extends Resource
                         ->preload()
                         ->label('Ciudad')
                         ->required(),
+                    Select::make('estado_migratorio_id')
+                        ->label('Estado Migratorio')
+                        ->relationship('estado_migratorio', 'nombre')
+                        ->searchable()
+                        ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
+                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                        ->preload()
+                        ->disabled($disabled),
                     Select::make('personas_aseguradas')
                         ->options([
                             'Solo' => 'Solo',
@@ -184,6 +193,49 @@ class ClienteResource extends Resource
                         ->live(onBlur: true)
                         ->required()
                         ->native(false),
+                    TextInput::make('benefit_id')
+                        ->type('text')
+                        ->hidden(! auth()->user()->hasRole(['benefit']))
+                        ->default(function (Set $set) {
+                            //dump(auth()->user()->id);
+                            if (auth()->user()->hasRole(['benefit'])) {
+                                $set('benefit_id', auth()->user()->id);
+                                return auth()->user()->id;
+                            }
+                            return '';
+                        }),
+                    TextInput::make('digitador_id')
+                        ->type('text')
+                        ->hidden(! auth()->user()->hasRole(['digitador']))
+                        ->default(function (Set $set) {
+                            //dump(auth()->user()->id);
+                            if (auth()->user()->hasRole(['digitador'])) {
+                                $set('digitador_id', auth()->user()->id);
+                                return auth()->user()->id;
+                            }
+                            return '';
+                        }),
+                    TextInput::make('procesador_id')
+                        ->type('text')
+                        ->hidden(! auth()->user()->hasRole(['procesador']))
+                        ->default(function (Set $set) {
+                            //dump(auth()->user()->id);
+                            if (auth()->user()->hasRole(['procesador'])) {
+                                $set('procesador_id', auth()->user()->id);
+                                return auth()->user()->id;
+                            }
+                            return '';
+                        }),
+                    /*TextInput::make('benefit2')
+                        // ->hidden(! auth()->user()->hasRole(['admin']))
+                        ->default(function (Set $set) {
+                            dump(auth()->user()->name);
+                            if (auth()->user()->hasRole(['admin'])) {
+                                $set('benefit2', auth()->user()->name);
+                                return auth()->user()->name;
+                            }
+                            return '';
+                        }),*/
                 ])
                 ->collapsible()
                 ->columns(4),
@@ -293,15 +345,11 @@ class ClienteResource extends Resource
                             return [
                                 Select::make('estado_migratorio_id')
                                     ->label('Estado Migratorio')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
-                                    ->hidden(function (Get $get) {
-                                        if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['admin'])) return true;
-                                        return false;
-                                    })
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                                    ->preload()
                                     ->disabled($disabled),
                                 TextInput::make('documento_migratorio')
                                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
@@ -426,17 +474,13 @@ class ClienteResource extends Resource
                                     ->boolean()
                                     ->required()
                                     ->columns(2),
-                                Select::make('estado_migratorio_id')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
-                                    ->label('Estado Migratorio')
-                                    ->relationship('estado_migratorio', 'nombre')
+                                Select::make('estado_migratorio_conyugue')
                                     ->searchable()
-                                    ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
-                                    ->hidden(function (Get $get) {
-                                        if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['admin'])) return true;
-                                        return false;
-                                    })
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                                    ->helperText('Elija entre las siguientes opciones')
+                                    ->preload()
+                                    ->live()
+                                    ->required()
                                     ->disabled($disabled),
                                 DatePicker::make('fec_nac_conyugue')
                                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
@@ -615,16 +659,12 @@ class ClienteResource extends Resource
                                     ])
                                     ->columnSpan(4),
                                 Select::make('estado_migratorio_id')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                                     ->label('Estado Migratorio')
                                     ->relationship('estado_migratorio', 'nombre')
                                     ->searchable()
                                     ->helperText('Elija entre las siguientes opciones: Solo, Conyugue, Dependientes, C&D')
-                                    ->hidden(function (Get $get) {
-                                        if (! $get('personas_aseguradas')) { return true; }
-                                        if (auth()->user()->hasRole(['admin'])) return true;
-                                        return false;
-                                    })
+                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                                    ->preload()
                                     ->disabled($disabled),
                                 TextInput::make('documento_migratorio')
                                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
@@ -851,118 +891,179 @@ class ClienteResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id'),
-                TextColumn::make('nombre1')
-                    ->searchable(),
-                TextColumn::make('nombre2')
-                    ->searchable(),
-                TextColumn::make('apellido1')
-                    ->searchable(),
-                TextColumn::make('apellido2')
-                    ->searchable(),
                 TextColumn::make('telefono')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                     ->searchable(),
                 TextColumn::make('email')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                    ->searchable(),
+                TextColumn::make('nombre1')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                    ->searchable(),
+                TextColumn::make('nombre2')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('apellido1')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                    ->searchable(),
+                TextColumn::make('apellido2')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('aplica_cobertura')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                     ->searchable(),
                 TextColumn::make('fec_nac')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                     ->searchable(),
                 TextColumn::make('direccion')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                     ->searchable(),
                 TextColumn::make('codigopostal')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('estado.nombre')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                     ->searchable(),
                 TextColumn::make('condado.nombre')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('ciudad.nombre')
-                    ->searchable(),
-                TextColumn::make('estado_migratorio.nombre')
-                    ->searchable(),
-                TextColumn::make('tipo_trabajo')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('personas_aseguradas')
-                    ->searchable(),
-                TextColumn::make('estado_civil_conyugue')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                     ->searchable(),
                 TextColumn::make('nombre_conyugue')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('aplica_covertura_conyugue')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('fec_nac_conyugue')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('dependientes.nombre_dependiente')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
                     ->searchable(),
                 TextColumn::make('dependientes_fuera_pareja')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('estado_migratorio.nombre')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('documento_migratorio')
+                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin']))
+                    ->searchable(),
+                TextColumn::make('tipo_trabajo')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('quien_aporta_ingresos')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('quien_declara_taxes')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('total_ingresos_gf')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('compania_aseguradora')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('plan_compania_aseguradora')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('prima_mensual')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('deducible')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('maximo_bolsillo')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('medicamento_generico')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('medico_primario')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('medico_especialista')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('sala_emergencia')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('subsidio')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('cobertura_ant')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('ultimo_agente')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('fecha_retiro')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('agente')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('inicio_cobertura_vig')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('fin_cobertura_vig')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('imagen')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('nota_benefit')
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
+                    ->searchable(),
+                TextColumn::make('nota_procesador')
+                    ->hidden(! auth()->user()->hasRole(['procesador']))
+                    ->searchable(),
+                TextColumn::make('nota_digitadora')
+                    ->hidden(! auth()->user()->hasRole(['digitadora']))
                     ->searchable(),
                 TextColumn::make('estado_cliente')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('digitador.digitador')
-                    ->hidden()
+                    ->hidden(! auth()->user()->hasRole(['digitador']))
                     ->searchable(),
                 TextColumn::make('fecha_digitadora')
                     ->hidden()
                     ->searchable(),
                 TextColumn::make('benefit.benefit')
-                    ->hidden()
+                    ->hidden(! auth()->user()->hasRole(['benefit']))
                     ->searchable(),
                 TextColumn::make('fecha_benefit')
                     ->hidden()
                     ->searchable(),
                 TextColumn::make('procesador.procesador')
-                    //->hidden()
+                    ->hidden(! auth()->user()->hasRole(['procesador']))
+                    ->searchable(),
+                TextColumn::make('fecha_procesador')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('compania.nombre_companias')
-                    ->searchable(),
-                TextColumn::make('cobertura_ant')
-                    ->searchable(),
-                TextColumn::make('codigo_anterior')
-                    ->searchable(),
-                TextColumn::make('ultimo_agente')
-                    ->searchable(),
-                TextColumn::make('fecha_retiro')
-                    ->searchable(),
-                TextColumn::make('agente')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('inicio_cobertura')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('fin_cobertura')
+                    ->hidden()
                     ->searchable(),
-                TextColumn::make('inicio_cobertura_vig')
-                    ->searchable(),
-                TextColumn::make('fin_cobertura_vig')
+                TextColumn::make('codigo_anterior')
+                    ->hidden()
                     ->searchable(),
                 TextColumn::make('fecha_retiro_cobertura_ant')
+                    ->hidden()
                     ->searchable(),
-                TextColumn::make('imagen')
-                    ->searchable(),
-                TextColumn::make('nota_benefit')
-                    ->searchable(),
-                TextColumn::make('nota_procesador')
-                    ->searchable(),
-                TextColumn::make('nota_digitadora')
+                TextColumn::make('estado_civil_conyugue')
+                    ->hidden()
                     ->searchable(),
             ])
             ->filters([
