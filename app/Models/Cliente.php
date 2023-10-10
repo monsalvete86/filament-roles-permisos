@@ -19,7 +19,7 @@ class Cliente extends Model
         'apellido1',
         'apellido2',
         'aplica_cobertura',
-        'estado_migratorio_conyugue',
+        'estado_migratorio_conyugue_id',
         'fec_nac',
         'direccion',
         'codigopostal',
@@ -59,9 +59,11 @@ class Cliente extends Model
         'cobertura_ant',
         'codigo_anterior',
         'ultimo_agente',
+        'admin_id',
         'fecha_retiro',
         'inicio_cobertura_vig',
         'fin_cobertura_vig',
+        'fecha_inicio_cobertura_ant',
         'fecha_retiro_cobertura_ant',
         'agente',
         'inicio_cobertura',
@@ -116,7 +118,7 @@ class Cliente extends Model
 
     public function compania(): BelongsTo
     {
-        return $this->belongsTo(Compania::class);
+        return $this->belongsTo(Compania::class, 'compania_id');
     }
     public function user(): BelongsTo
     {
