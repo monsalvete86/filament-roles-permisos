@@ -280,192 +280,194 @@ class ClienteResource extends Resource
                 ])
                 ->collapsible()
                 ->columns(4),
-            Section::make('Datos a Consultar')
-                ->schema(
-                    function (Get $get) use ($form) {
+            !auth()->user()->hasRole(['benefit']) ?
+                Section::make('Datos a Consultar')
+                    ->schema(
+                        function (Get $get) use ($form) {
 
-                        $edit = isset($form->model->exists) ;
-                        $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin']);
-                        $disabled = auth()->user()->hasRole(['digitador']) && $edit ? true : false;
-                        $auxSchema = [];
+                            $edit = isset($form->model->exists) ;
+                            $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin']);
+                            $disabled = auth()->user()->hasRole(['digitador']) && $edit ? true : false;
+                            $auxSchema = [];
 
-                        array_push($auxSchema, Section::make('Datos a afiliacion')
-                            ->schema([
-                                Select::make('quien_aporta_ingresos')
-                                    ->helperText('Quíen aporta los ingresos del hogar?')
-                                    ->options([
-                                        'Solo' => 'Solo',
-                                        'Conyugue' => 'Conyugue',
-                                        'Juntos' => 'Juntos',
-                                    ])
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->required(),
-                                Select::make('quien_declara_taxes')
-                                    ->helperText('Como declara los impuestos (Taxes)?')
-                                    ->options([
-                                        'Solo' => 'Solo',
-                                        'Conyugue' => 'Conyugue',
-                                        'Juntos' => 'Juntos',
-                                    ])
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->required(),
-                                TextInput::make('total_ingresos_gf')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->label('Total ingresos gf')
-                                    ->type('number')
-                                    ->placeholder('Total ingresos del grupo familiar'),
-                                Select::make('compania_id')
-                                    ->searchable()
-                                    ->options (fn (Get $get): Collection => Compania::all()
-                                        ->where('estado_id', $get('estado_id'))
-                                        ->pluck('nombre_companias', 'id')
-                                    )
-                                    ->helperText('Compañia elegida para dar la cobertura')
-                                    ->disabled($disabled)
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->preload()
-                                    ->live()
-                                    ->label('Compania aseguradora')
-                                    ->required(),
-                                TextInput::make('plan_compania_aseguradora')
-                                    ->placeholder('Plan seleccionado por el cliente')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->required(),
-                                TextInput::make('prima_mensual')
-                                    ->label('Prima mensual')
-                                    ->placeholder('Prima mensual')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->type('number'),
-                                TextInput::make('deducible')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->maxLength(255),
-                                TextInput::make('maximo_bolsillo')
-                                    ->label('Maximo bolsillo')
-                                    ->placeholder('Máximo de bolsillo')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->maxLength(255),
-                                TextInput::make('medicamento_generico')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->maxLength(255),
-                                TextInput::make('medico_primario')
-                                    ->label('Medico primario')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->maxLength(255),
-                                TextInput::make('medico_especialista')
-                                    ->label('Medico especialista')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->maxLength(255),
-                                TextInput::make('sala_emergencia')
-                                    ->placeholder('Sala de emergencia')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->maxLength(255),
-                                TextInput::make('subsidio')
-                                    ->label('Subsidio')
-                                    ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                    ->disabled($disabled)
-                                    ->maxLength(255),
-                                DatePicker::make('inicio_cobertura')
-                                    ->label('Fecha inicio cobertura')
-                                    ->hidden(! auth()->user()->hasRole(['digitador' , 'admin' , 'procesador']))
-                                    ->required()
-                                    ->disabled($disabled),
-                                DatePicker::make('fin_cobertura')
-                                    ->label('Fecha fin cobertura')
-                                    ->after('inicio_cobertura')
-                                    ->hidden(! auth()->user()->hasRole(['digitador' , 'admin' , 'procesador']))
-                                    ->required()
-                                    ->disabled($disabled),
-                            ])
-                            ->collapsible()
-                            ->columns(4)
-                        );
-
-                        if ($get('personas_aseguradas') && ($get('personas_aseguradas') === 'Conyugue' || $get('personas_aseguradas') === 'Conyugue y Dependientes')) {
-                            array_push($auxSchema, Section::make('Datos Conyugue')
+                            array_push($auxSchema, Section::make('Datos a afiliacion')
                                 ->schema([
-                                    TextInput::make('nombre_conyugue')
-                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                        ->disabled($disabled)
-                                        ->required()
-                                        ->maxLength(255),
-                                    Radio::make('aplica_covertura_conyugue')
-                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                        ->disabled($disabled)
-                                        ->boolean()
-                                        ->required()
-                                        ->columns(2),
-                                    Select::make('estado_migratorio_conyugue_id')
-                                        ->label('Estado migratorio conyugue')
-                                        ->relationship('estado_migratorio', 'nombre')
-                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                        ->helperText('Elija entre las siguientes opciones')
-                                        ->preload()
-                                        ->disabled($disabled),
-                                    DatePicker::make('fec_nac_conyugue')
-                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                        ->label('Fecha nacimiento conyugue ')
-                                        ->required()
-                                        ->disabled($disabled)
-                                        ->helperText('Ingrese la fecha de nacimiento del conyugue'),
-                                ])
-                                ->collapsible()
-                                ->columns(4)
-                            );
-                        }
-
-                        if ($get('personas_aseguradas') && ($get('personas_aseguradas') === 'Dependientes' || $get('personas_aseguradas') === 'Conyugue y Dependientes')) {
-                            array_push($auxSchema, Section::make('Datos Dependientes')
-                                ->schema([
-                                    Repeater::make('dependientes')
-                                        ->relationship()
-                                        ->label('Dependientes')
-                                        ->schema([
-                                        Section::make()
-                                            ->schema([
-                                                TextInput::make('nombre_dependiente')
-                                                    ->required()
-                                                    ->maxLength(255),
-                                                Radio::make('aplica_cobertura_dependiente')
-                                                    ->required()
-                                                    ->boolean()
-                                                    ->columns(2),
-                                                Select::make('estado_migratorio_dependiente_id')
-                                                    ->label('Estado migratorio dependiente')
-                                                    ->relationship('estado_migratorio_dependiente', 'nombre')
-                                                    ->searchable()
-                                                    ->preload()
-                                                    ->required(),
-                                                DatePicker::make('fec_nac_dependiente')
-                                                    ->label('Fecha de Nacimiento')
-                                                    ->required(),
-                                            ])
-                                            ->columns(4),
+                                    Select::make('quien_aporta_ingresos')
+                                        ->helperText('Quíen aporta los ingresos del hogar?')
+                                        ->options([
+                                            'Solo' => 'Solo',
+                                            'Conyugue' => 'Conyugue',
+                                            'Juntos' => 'Juntos',
                                         ])
-                                        ->columnSpan(4),
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->required(),
+                                    Select::make('quien_declara_taxes')
+                                        ->helperText('Como declara los impuestos (Taxes)?')
+                                        ->options([
+                                            'Solo' => 'Solo',
+                                            'Conyugue' => 'Conyugue',
+                                            'Juntos' => 'Juntos',
+                                        ])
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->required(),
+                                    TextInput::make('total_ingresos_gf')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->label('Total ingresos gf')
+                                        ->type('number')
+                                        ->placeholder('Total ingresos del grupo familiar'),
+                                    Select::make('compania_id')
+                                        ->searchable()
+                                        ->options (fn (Get $get): Collection => Compania::all()
+                                            ->where('estado_id', $get('estado_id'))
+                                            ->pluck('nombre_companias', 'id')
+                                        )
+                                        ->helperText('Compañia elegida para dar la cobertura')
+                                        ->disabled($disabled)
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->preload()
+                                        ->live()
+                                        ->label('Compania aseguradora')
+                                        ->required(),
+                                    TextInput::make('plan_compania_aseguradora')
+                                        ->placeholder('Plan seleccionado por el cliente')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->required(),
+                                    TextInput::make('prima_mensual')
+                                        ->label('Prima mensual')
+                                        ->placeholder('Prima mensual')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->type('number'),
+                                    TextInput::make('deducible')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->maxLength(255),
+                                    TextInput::make('maximo_bolsillo')
+                                        ->label('Maximo bolsillo')
+                                        ->placeholder('Máximo de bolsillo')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->maxLength(255),
+                                    TextInput::make('medicamento_generico')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->maxLength(255),
+                                    TextInput::make('medico_primario')
+                                        ->label('Medico primario')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->maxLength(255),
+                                    TextInput::make('medico_especialista')
+                                        ->label('Medico especialista')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->maxLength(255),
+                                    TextInput::make('sala_emergencia')
+                                        ->placeholder('Sala de emergencia')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->maxLength(255),
+                                    TextInput::make('subsidio')
+                                        ->label('Subsidio')
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->disabled($disabled)
+                                        ->maxLength(255),
+                                    DatePicker::make('inicio_cobertura')
+                                        ->label('Fecha inicio cobertura')
+                                        ->hidden(! auth()->user()->hasRole(['digitador' , 'admin' , 'procesador']))
+                                        ->required()
+                                        ->disabled($disabled),
+                                    DatePicker::make('fin_cobertura')
+                                        ->label('Fecha fin cobertura')
+                                        ->after('inicio_cobertura')
+                                        ->hidden(! auth()->user()->hasRole(['digitador' , 'admin' , 'procesador']))
+                                        ->required()
+                                        ->disabled($disabled),
                                 ])
                                 ->collapsible()
                                 ->columns(4)
                             );
+
+                            if ($get('personas_aseguradas') && ($get('personas_aseguradas') === 'Conyugue' || $get('personas_aseguradas') === 'Conyugue y Dependientes')) {
+                                array_push($auxSchema, Section::make('Datos Conyugue')
+                                    ->schema([
+                                        TextInput::make('nombre_conyugue')
+                                            ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                            ->disabled($disabled)
+                                            ->required()
+                                            ->maxLength(255),
+                                        Radio::make('aplica_covertura_conyugue')
+                                            ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                            ->disabled($disabled)
+                                            ->boolean()
+                                            ->required()
+                                            ->columns(2),
+                                        Select::make('estado_migratorio_conyugue_id')
+                                            ->label('Estado migratorio conyugue')
+                                            ->relationship('estado_migratorio', 'nombre')
+                                            ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                            ->helperText('Elija entre las siguientes opciones')
+                                            ->preload()
+                                            ->disabled($disabled),
+                                        DatePicker::make('fec_nac_conyugue')
+                                            ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                            ->label('Fecha nacimiento conyugue ')
+                                            ->required()
+                                            ->disabled($disabled)
+                                            ->helperText('Ingrese la fecha de nacimiento del conyugue'),
+                                    ])
+                                    ->collapsible()
+                                    ->columns(4)
+                                );
+                            }
+
+                            if ($get('personas_aseguradas') && ($get('personas_aseguradas') === 'Dependientes' || $get('personas_aseguradas') === 'Conyugue y Dependientes')) {
+                                array_push($auxSchema, Section::make('Datos Dependientes')
+                                    ->schema([
+                                        Repeater::make('dependientes')
+                                            ->relationship()
+                                            ->label('Dependientes')
+                                            ->schema([
+                                            Section::make()
+                                                ->schema([
+                                                    TextInput::make('nombre_dependiente')
+                                                        ->required()
+                                                        ->maxLength(255),
+                                                    Radio::make('aplica_cobertura_dependiente')
+                                                        ->required()
+                                                        ->boolean()
+                                                        ->columns(2),
+                                                    Select::make('estado_migratorio_dependiente_id')
+                                                        ->label('Estado migratorio dependiente')
+                                                        ->relationship('estado_migratorio_dependiente', 'nombre')
+                                                        ->searchable()
+                                                        ->preload()
+                                                        ->required(),
+                                                    DatePicker::make('fec_nac_dependiente')
+                                                        ->label('Fecha de Nacimiento')
+                                                        ->required(),
+                                                ])
+                                                ->columns(4),
+                                            ])
+                                            ->columnSpan(4),
+                                    ])
+                                    ->collapsible()
+                                    ->columns(4)
+                                );
+                            }
+
+                            return $auxSchema;
                         }
-
-                        return $auxSchema;
-                    }
-                )
-                ->collapsible()
-                ->columns(4)
-            ];
-
+                    )
+                    ->collapsible()
+                    ->columns(4) :
+                Section::make('')
+                    ->schema([])
+        ];
 
 
         if (auth()->user()->hasRole(['benefit', 'admin'])) {

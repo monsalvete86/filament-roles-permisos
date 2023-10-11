@@ -21,6 +21,10 @@ class DependienteResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
 
+    protected static ?string $navigationGroup = 'Configuración del Sistema';
+
+    protected static ?int $navigationSort = 0;
+
     public static function form(Form $form): Form
     {
         return $form
