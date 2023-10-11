@@ -96,6 +96,12 @@ class Cliente extends Model
         return $this->belongsTo(EstadoMigratorio::class, 'estado_migratorio_id');
     }
 
+    public function estado_migratorio_conyugue(): BelongsTo
+    {
+        return $this->belongsTo(EstadoMigratorio::class, 'estado_migratorio_conyugue_id');
+    }
+
+
     public function dependientes(): HasMany
     {
         return $this->hasMany(Dependiente::class);

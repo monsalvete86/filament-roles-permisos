@@ -10,11 +10,19 @@ class EditCliente extends EditRecord
 {
     protected static string $resource = ClienteResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (auth()->user()->hasRole(['procesador'])) {
+            $data['estado_cliente'] = 'Procesado';
+        }
+        return $data;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make()
-                ->hidden(! auth()->user()->can('EsDigitador')),
+                ->hidden(! auth()->user()->hasRole(['admin'])),
         ];
     }
     protected function getRedirectUrl(): string

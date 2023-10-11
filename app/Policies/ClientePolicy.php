@@ -37,7 +37,7 @@ class ClientePolicy
      */
     public function update(User $user, Cliente $cliente): bool
     {
-        return $user->hasRole(['admin' , 'procesador' , 'benefit']);
+        return $user->hasRole(['admin' , 'procesador' , 'benefit', 'digitador']);
     }
 
     /**
@@ -53,7 +53,7 @@ class ClientePolicy
      */
     public function restore(User $user, Cliente $cliente): bool
     {
-        return $user->hasRole(['digitador' , 'admin']);
+        return $user->hasRole(['admin']);
     }
 
     /**
