@@ -12,10 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('clientes', function (Blueprint $table) {
-            // Eliminamos la columna estado_migratorio_coyugue
-            //$table->dropColumn('estado_migratorio_coyugue');
-
-            // Agregamos la columna estado_migratorio_id como llave foranea
+            // Agregamos la columna compania como llave foranea
             $table->foreignId('compania_id')
                 ->constrained('compania')
                 ->cascadeOnDelete();
@@ -28,10 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('clientes', function (Blueprint $table) {
-            // Eliminamos la llave foranea estado_migratorio_id
-            //$table->dropForeign('compania_id');
-
-            // Agregamos la columna estado_migratorio_coyugue
+            // Agregamos la columna compania
             $table->string('compania')->nullable();
         });
     }
