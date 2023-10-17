@@ -387,6 +387,11 @@ class ClienteResource extends Resource
                                         ->hidden(! auth()->user()->hasRole(['digitador' , 'admin' , 'procesador']))
                                         ->required()
                                         ->disabled($disabled),
+                                    DatePicker::make('fecha_retiro')
+                                        ->label('Fecha retiro')
+                                        ->after('inicio_cobertura')
+                                        ->hidden(! auth()->user()->hasRole(['digitador' , 'admin' , 'procesador']))
+                                        ->disabled($disabled),
                                 ])
                                 ->collapsible()
                                 ->columns(4)
@@ -563,25 +568,53 @@ class ClienteResource extends Resource
             ]);
     }
 
+    public static function verificarPerfil(Builder $query): Builder {
+        if (auth()->user()->hasRole(['benefit'])) {
+            return $query->where('benefit_id', '=', auth()->user()->id);    
+        }
+
+        if (auth()->user()->hasRole(['procesador'])) {
+            return $query->where('procesador_id', '=', auth()->user()->id);    
+        }
+
+        if (auth()->user()->hasRole(['digitador'])) {
+            return $query->where('digitador_id', '=', auth()->user()->id);    
+        }
+
+        return $query->where('id', '>', '0');
+    }
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('id'),
+                TextColumn::make('created_at')
+                    ->label('Fecha Digitado')
+                    ->sortable()
+                    ->searchable()
+                    ->date(),
                 TextColumn::make('telefono')
                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                    ->searchable(),
+                    ->searchable(isIndividual: true)
+                    ->sortable(),
                 TextColumn::make('email')
+                    ->sortable()
+                    ->searchable(isIndividual: true)
                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
                     ->searchable(),
                 TextColumn::make('nombre1')
-                    ->searchable(),
+                    ->sortable()
+                    ->searchable(isIndividual: true),
                 TextColumn::make('nombre2')
-                    ->searchable(),
+                    ->sortable()
+                    ->searchable(isIndividual: true),
                 TextColumn::make('apellido1')
-                    ->searchable(),
+                    ->sortable()
+                    ->searchable(isIndividual: true),
                 TextColumn::make('apellido2')
-                    ->searchable(),
+                    ->sortable()
+                    ->searchable(isIndividual: true),
                 TextColumn::make('aplica_cobertura')
                     ->searchable()
                     ->badge()
@@ -597,6 +630,7 @@ class ClienteResource extends Resource
                     ->hidden()
                     ->searchable(),
                 TextColumn::make('estado.nombre')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('condado.nombre')
                     ->hidden()
@@ -605,7 +639,8 @@ class ClienteResource extends Resource
                     ->hidden()
                     ->searchable(),
                 TextColumn::make('compania.nombre_companias')
-                    ->searchable(),
+                    ->sortable()
+                    ->searchable(isIndividual: true),
                 TextColumn::make('personas_aseguradas')
                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
                     ->searchable(),
@@ -701,22 +736,22 @@ class ClienteResource extends Resource
                     ->searchable(),
                 TextColumn::make('estado_cliente')
                     // ->hidden()
-                    ->searchable(),
+                    ->searchable(isIndividual: true),
                 TextColumn::make('digitador.name')
                     ->hidden(! auth()->user()->hasRole(['admin']))
-                    ->searchable(),
+                    ->searchable(isIndividual: true),
                 TextColumn::make('fecha_digitadora')
                     ->hidden(! auth()->user()->hasRole(['admin']))
                     ->searchable(),
                 TextColumn::make('benefit.name')
                     ->hidden(! auth()->user()->hasRole(['admin']))
-                    ->searchable(),
+                    ->searchable(isIndividual: true),
                 TextColumn::make('fecha_benefit')
                     ->hidden(! auth()->user()->hasRole(['admin']))
                     ->searchable(),
                 TextColumn::make('procesador.name')
                     ->hidden(! auth()->user()->hasRole(['admin']))
-                    ->searchable(),
+                    ->searchable(isIndividual: true),
                 TextColumn::make('admin.name')
                     ->hidden(! auth()->user()->hasRole(['admin']))
                     ->searchable(),
@@ -724,17 +759,20 @@ class ClienteResource extends Resource
                     ->hidden(! auth()->user()->hasRole(['admin']))
                     ->searchable()
             ])
+            ->striped()
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
+            ->modifyQueryUsing(fn (Builder $query) => self::verificarPerfil($query))
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+                /* Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ]),*/
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()

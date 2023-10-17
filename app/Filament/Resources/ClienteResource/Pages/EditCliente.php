@@ -13,7 +13,11 @@ class EditCliente extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         if (auth()->user()->hasRole(['procesador'])) {
-            $data['estado_cliente'] = 'Procesado';
+            if ($data['aplica_cobertura']) {
+                $data['estado_cliente'] = 'Procesado';
+            } else {
+                $data['estado_cliente'] = 'No procesado';
+            }
         }
         return $data;
     }
