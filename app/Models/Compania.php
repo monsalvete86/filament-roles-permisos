@@ -16,6 +16,7 @@ class Compania extends Model
         'direccion',
         'telefono',
         'imeil',
+        'codigo',
         'estado_id',
     ];
 

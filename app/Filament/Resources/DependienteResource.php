@@ -50,9 +50,6 @@ class DependienteResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required(),
-                        TextInputColumn::make('conyugue_1'),
-                        TextInputColumn::make('conyugue_2'),
-                        TextInputColumn::make('conyugue_3'),
                     ])->columns(3)
             ]);
     }

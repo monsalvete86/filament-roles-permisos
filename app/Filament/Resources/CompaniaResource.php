@@ -48,12 +48,15 @@ class CompaniaResource extends Resource
                             ->email()
                             ->required()
                             ->unique(),
+                        Forms\Components\TextInput::make('codigo')
+                            ->required()
+                            ->maxLength(255),
                         Forms\Components\Select::make('estado_id')
                             ->relationship('estado', 'nombre')
                             ->searchable()
                             ->preload()
                             ->required(),
-                ])->columns(2)
+                ])->columns(3)
             ]);
     }
 
@@ -69,6 +72,8 @@ class CompaniaResource extends Resource
                 TextColumn::make('telefono')
                     ->searchable(),
                 TextColumn::make('imeil')
+                    ->searchable(),
+                TextColumn::make('codigo')
                     ->searchable(),
                 TextColumn::make('estado.nombre')
                     ->searchable(),
