@@ -46,7 +46,7 @@ class CiudadResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required(),
-                ])->columns(2)
+                    ])->columns(2)
             ]);
     }
 

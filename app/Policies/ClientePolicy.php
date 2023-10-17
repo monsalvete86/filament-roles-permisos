@@ -13,7 +13,7 @@ class ClientePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['digitador' , 'admin' , 'procesador' , 'benefit']);
+        return $user->hasRole(['digitador' , 'admin' , 'procesador' , 'benefit' , 'coordinador']);
     }
 
     /**
@@ -21,7 +21,7 @@ class ClientePolicy
      */
     public function view(User $user, Cliente $cliente): bool
     {
-        return $user->hasRole(['digitador' , 'admin' , 'procesador' , 'benefit']);
+        return $user->hasRole(['digitador' , 'admin' , 'procesador' , 'benefit' , 'coordinador']);
     }
 
     /**
@@ -37,7 +37,7 @@ class ClientePolicy
      */
     public function update(User $user, Cliente $cliente): bool
     {
-        return $user->hasRole(['admin' , 'procesador' , 'benefit', 'digitador']);
+        return $user->hasRole(['admin' , 'procesador' , 'benefit', 'digitador' , 'coordinador']);
     }
 
     /**

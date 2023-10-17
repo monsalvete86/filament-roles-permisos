@@ -93,7 +93,7 @@ class CompaniaResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\PlanesCompaniaRelationManager::class,
         ];
     }
 

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coordinadors', function (Blueprint $table) {
+        Schema::create('planes_companias', function (Blueprint $table) {
             $table->id();
-            $table->string('menber')->nullable();
-            $table->string('audio')->nullable();
+            $table->string('nombre');
+            $table->foreignId('compania_id')->constrained('companias')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('coordinadores');
+        Schema::dropIfExists('planes_companias');
     }
 };

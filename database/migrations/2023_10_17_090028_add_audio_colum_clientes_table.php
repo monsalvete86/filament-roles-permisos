@@ -12,10 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('clientes', function (Blueprint $table) {
-            // Agregamos la columna compania como llave foranea
-            $table->foreignId('compania_id')
-                ->constrained('compania')
-                ->cascadeOnDelete();
+            $table->string('audio')->nullable();
         });
     }
 
@@ -25,8 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('clientes', function (Blueprint $table) {
-            // Agregamos la columna compania
-            $table->string('compania')->nullable();
+            $table->string('audio')->nullable();
         });
     }
 };
