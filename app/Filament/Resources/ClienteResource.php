@@ -3,35 +3,36 @@
 namespace App\Filament\Resources;
 
 use Filament\Forms;
+use App\Models\User;
 use Filament\Tables;
+use App\Models\Ciudad;
 use App\Models\Estado;
 use App\Models\Cliente;
 use App\Models\Condado;
-use App\Models\Compania;
-use App\Models\EstadoMigratorio;
-use App\Models\User;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use App\Models\Compania;
 use Filament\Forms\Form;
+use Filament\Tables\Table;
+use App\Models\PlanesCompania;
+use App\Models\EstadoMigratorio;
 use Filament\Resources\Resource;
 use Illuminate\Support\Collection;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Repeater;
-use Filament\Tables\Table;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\FileUpload;
 use App\Filament\Resources\ClienteResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\ClienteResource\RelationManagers;
-use App\Models\Ciudad;
 
 class ClienteResource extends Resource
 {
@@ -325,17 +326,30 @@ class ClienteResource extends Resource
                                             ->pluck('nombre_companias', 'id')
                                         )
                                         ->helperText('Compañia elegida para dar la cobertura')
+                                        ->label('Compania aseguradora')
                                         ->disabled($disabled)
                                         ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
                                         ->preload()
                                         ->live()
-                                        ->label('Compania aseguradora')
                                         ->required(),
-                                    TextInput::make('plan_compania_aseguradora')
+                                    Select::make('plan_compania_aseguradora')
+                                        ->searchable()
+                                        ->options (fn (Get $get): Collection => PlanesCompania::all()
+                                            ->where('compania_id', $get('compania_id'))
+                                            ->pluck('nombre', 'id')
+                                        )
+                                        ->helperText('Plan elegido para dar la cobertura')
+                                        ->label('Plan seleccionado por el cliente')
+                                        ->disabled($disabled)
+                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
+                                        ->preload()
+                                        ->live()
+                                        ->required(),
+                                    /*TextInput::make('plan_compania_aseguradora')
                                         ->placeholder('Plan seleccionado por el cliente')
                                         ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
                                         ->disabled($disabled)
-                                        ->required(),
+                                        ->required(),*/
                                     TextInput::make('prima_mensual')
                                         ->label('Prima mensual')
                                         ->placeholder('Prima mensual')
@@ -533,9 +547,15 @@ class ClienteResource extends Resource
 
         array_push($schemas, Section::make('Datos Adicionales')
             ->schema([
+                TextInput::make('audio')
+                    ->label('Audio')
+                    ->hidden(! auth()->user()->hasRole(['coordinador', 'admin' , 'procesador']))
+                    ->disabled(! auth()->user()->hasRole(['coordinador', 'admin']))
+                    ->url()
+                    ->suffixIcon('heroicon-m-globe-alt'),
                 TextInput::make('image')
                     ->label('Imagen')
-                    // ->disabled(! auth()->user()->can('EsBenefit'))
+                    ->hidden(! auth()->user()->hasRole(['benefit', 'admin' , 'procesador']))
                     ->url()
                     ->suffixIcon('heroicon-m-globe-alt'),
                 Textarea::make('nota_benefit')

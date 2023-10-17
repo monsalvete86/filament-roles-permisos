@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('direccion')->nullable();
             $table->string('telefono')->nullable();
             $table->string('imeil')->nullable();
+            $table->string('codigo')->nullable();
             $table->foreignId('estado_id')->constrained('estados')->cascadeOnDelete();
             $table->timestamps();
         });
