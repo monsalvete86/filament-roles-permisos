@@ -31,8 +31,15 @@ class DependienteResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                        Forms\Components\TextInput::make('nombre_dependiente')
+                        Forms\Components\TextInput::make('nombre1_dependiente')
                             ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('nombre2_dependiente')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('apellido1_dependiente')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('apellido2_dependiente')
                             ->maxLength(255),
                         Forms\Components\Radio::make('aplica_cobertura_dependiente')
                             ->required()

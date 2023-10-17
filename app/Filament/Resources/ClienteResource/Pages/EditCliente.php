@@ -35,6 +35,6 @@ class EditCliente extends EditRecord
     }
     protected function getSavedNotificationTitle(): ?string
     {
-        return 'Cliente updated';
+        return 'Cliente actualizado';
     }
 }

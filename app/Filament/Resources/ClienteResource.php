@@ -27,7 +27,9 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\SelectColumn;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\TextInputColumn;
 use Filament\Infolists\Components\FileUpload;
 use App\Filament\Resources\ClienteResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -642,6 +644,7 @@ class ClienteResource extends Resource
                     ->formatStateUsing(fn (string $state): string => $state ? 'Si' : 'No'),
                 TextColumn::make('fec_nac')
                     ->label('Fecha nacimiento')
+                    ->date()
                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
                     ->searchable(),
                 TextColumn::make('direccion')
@@ -664,7 +667,16 @@ class ClienteResource extends Resource
                 TextColumn::make('personas_aseguradas')
                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
                     ->searchable(),
-                TextColumn::make('nombre_conyugue')
+                TextColumn::make('nombre1_conyugue')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('nombre2_conyugue')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('apellido1_conyugue')
+                    ->hidden()
+                    ->searchable(),
+                TextColumn::make('apellido2_conyugue')
                     ->hidden()
                     ->searchable(),
                 TextColumn::make('aplica_covertura_conyugue')
@@ -673,7 +685,7 @@ class ClienteResource extends Resource
                 TextColumn::make('fec_nac_conyugue')
                     ->hidden()
                     ->searchable(),
-                TextColumn::make('dependientes.nombre_dependiente')
+                TextColumn::make('dependientes.nombre1_dependiente')
                     ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
                     ->listWithLineBreaks()
                     ->badge()
@@ -758,26 +770,51 @@ class ClienteResource extends Resource
                     // ->hidden()
                     ->searchable(isIndividual: true),
                 TextColumn::make('digitador.name')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador']))
                     ->searchable(isIndividual: true),
                 TextColumn::make('fecha_digitadora')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
+                    ->date()
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador']))
                     ->searchable(),
-                TextColumn::make('benefit.name')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
-                    ->searchable(isIndividual: true),
+                TextInputColumn::make('audio')
+                    ->extraAttributes(['class' => 'w-100 min-w-full'])
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador', 'procesador']))
+                    ->disabled(! auth()->user()->hasRole(['admin', 'coordinador'])),
+                SelectColumn::make('benefit_id')
+                    ->extraAttributes(['class' => 'w-100 min-w-full'])
+                    ->label('Benefit Asignado')
+                    ->disabled(fn ($record): bool => $record->fecha_benefit ? true : false)
+                    ->options (fn (Get $get): Collection => User::all()
+                        //->where('id', $get('estado_id'))
+                        ->pluck('name', 'id')
+                    ),
                 TextColumn::make('fecha_benefit')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador']))
+                    ->date()
                     ->searchable(),
-                TextColumn::make('procesador.name')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
-                    ->searchable(isIndividual: true),
-                TextColumn::make('admin.name')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
-                    ->searchable(),
-                TextColumn::make('fecha_procesador')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
+                SelectColumn::make('procesador_id')
+                    //->extraAttributes(['class' => 'w-100 min-w-full'])
+                    ->label('Procesador Asignado')
                     ->searchable()
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador']))
+                    ->disabled(fn ($record): bool => $record->fecha_benefit && $record->audio ? false : true)
+                    ->options (fn (Get $get): Collection => User::all()
+                        //->where('id', $get('estado_id'))
+                        ->pluck('name', 'id')
+                    ),
+                TextColumn::make('fecha_procesador')
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador']))
+                    ->searchable(),
+                TextInputColumn::make('crm_id')
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador', 'procesador']))
+                    ->disabled(! auth()->user()->hasRole(['admin', 'coordinador'])),
+                TextInputColumn::make('member_id')
+                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador', 'procesador']))
+                    ->disabled(! auth()->user()->hasRole(['admin', 'coordinador'])),
+                /* TextColumn::make('admin.name')
+                    ->hidden(! auth()->user()->hasRole(['admin']))
+                    ->searchable(), */
+                
             ])
             ->striped()
             ->defaultSort('created_at', 'desc')

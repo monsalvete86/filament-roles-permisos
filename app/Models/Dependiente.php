@@ -11,7 +11,10 @@ class Dependiente extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nombre_dependiente',
+        'nombre1_dependiente',
+        'nombre2_dependiente',
+        'apellido1_dependiente',
+        'apellido2_dependiente',
         'aplica_cobertura_dependiente',
         'estado_migratorio_dependiente_id',
         'fec_nac_dependiente',

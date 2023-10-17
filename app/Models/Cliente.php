@@ -31,7 +31,10 @@ class Cliente extends Model
         'tipo_trabajo',
         'personas_aseguradas',
         'estado_civil_conyugue',
-        'nombre_conyugue',
+        'nombre1_conyugue',
+        'nombre2_conyugue',
+        'apellido1_conyugue',
+        'apellido2_conyugue',
         'aplica_covertura_conyugue',
         'fec_nac_conyugue',
         'dependientes_fuera_pareja',
@@ -74,6 +77,10 @@ class Cliente extends Model
         'nota_digitadora',
         'documento_migratorio',
         'user_id',
+        'audio',
+        'crm_id',
+        'member_id',
+    
     ];
 
     public function estado(): BelongsTo
