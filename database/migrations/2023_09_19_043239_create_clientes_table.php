@@ -33,7 +33,10 @@ return new class extends Migration
             $table->string('personas_aseguradas');
             $table->string('estado_migratorio_conyugue')->nullable();
             $table->string('estado_civil_conyugue')->nullable();
-            $table->string('nombre_conyugue')->nullable();
+            $table->string('nombre1_conyugue')->nullable();
+            $table->string('nombre2_conyugue')->nullable();
+            $table->string('apellido1_conyugue')->nullable();
+            $table->string('apellido2_conyugue')->nullable();
             $table->boolean('aplica_covertura_conyugue')->default(true);
             $table->date('fec_nac_conyugue')->nullable();
             $table->boolean('dependientes_fuera_pareja')->default(true);
@@ -75,6 +78,9 @@ return new class extends Migration
             $table->text('nota_benefit')->nullable();
             $table->text('nota_procesador')->nullable();
             $table->text('nota_digitadora')->nullable();
+            $table->string('audio')->nullable();
+            $table->foreignId('crm_id')->constrained('clientes')->cascadeOnDelete();
+            $table->foreignId('member_id')->constrained('clientes')->cascadeOnDelete();
             $table->timestamps();
         });
     }

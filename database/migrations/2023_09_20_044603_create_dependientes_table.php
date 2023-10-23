@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('dependientes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente_id')->constrained('clientes')->cascadeOnDelete();
-            $table->string('nombre')->nullable();
+            $table->string('nombre1_dependiente')->nullable();
+            $table->string('nombre2_dependiente')->nullable();
+            $table->string('apellido1_dependiente')->nullable();
+            $table->string('apellido2_dependiente')->nullable();
             $table->boolean('aplica_cobertura')->default(true);
             $table->foreignId('estado_migratorio_id')->constrained('estado_migratorios')->cascadeOnDelete();
             $table->date('fec_nac')->nullable();

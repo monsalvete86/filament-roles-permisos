@@ -592,15 +592,15 @@ class ClienteResource extends Resource
 
     public static function verificarPerfil(Builder $query): Builder {
         if (auth()->user()->hasRole(['benefit'])) {
-            return $query->where('benefit_id', '=', auth()->user()->id);    
+            return $query->where('benefit_id', '=', auth()->user()->id);
         }
 
         if (auth()->user()->hasRole(['procesador'])) {
-            return $query->where('procesador_id', '=', auth()->user()->id);    
+            return $query->where('procesador_id', '=', auth()->user()->id);
         }
 
         if (auth()->user()->hasRole(['digitador'])) {
-            return $query->where('digitador_id', '=', auth()->user()->id);    
+            return $query->where('digitador_id', '=', auth()->user()->id);
         }
 
         return $query->where('id', '>', '0');
@@ -814,7 +814,7 @@ class ClienteResource extends Resource
                 /* TextColumn::make('admin.name')
                     ->hidden(! auth()->user()->hasRole(['admin']))
                     ->searchable(), */
-                
+
             ])
             ->striped()
             ->defaultSort('created_at', 'desc')

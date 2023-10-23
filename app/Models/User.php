@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Panel;
 use Laravel\Sanctum\HasApiTokens;
-
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
@@ -19,6 +19,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
+
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -64,4 +67,14 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsTo(Role::class);
     }*/
+
+    public function digitador(): HasMany
+    {
+        return $this->hasMany(DigitadorCoordinador::class, 'coordinador_id');
+    }
+
+    public function coordinador(): HasMany
+    {
+        return $this->hasMany(DigitadorCoordinador::class, 'digitador_id');
+    }
 }
