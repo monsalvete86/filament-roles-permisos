@@ -13,9 +13,18 @@ return new class extends Migration
     {
         Schema::create('digitadores_coordinadores', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('digitador_id');
+            $table->unsignedBigInteger('coordinador_id');
+            $table->timestamps();
+
             $table->foreignId('coordinador_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('digitador_id')->constrained('users')->cascadeOnDelete();
-            $table->timestamps();
+
+            // $table->foreign('digitador_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('coordinador_id')->references('id')->on('users')->onDelete('cascade');
+
+            // Esto garantiza que la combinación de digitador y coordinador sea única.
+            $table->unique(['digitador_id', 'coordinador_id']);
         });
     }
 

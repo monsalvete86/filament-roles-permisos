@@ -77,4 +77,14 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(DigitadorCoordinador::class, 'digitador_id');
     }
+
+    public function coordinadores()
+    {
+        return $this->belongsToMany(User::class, 'digitadores_coordinadores', 'digitador_id', 'coordinador_id');
+    }
+
+    public function digitadores()
+    {
+        return $this->belongsToMany(User::class, 'digitadores_coordinadores', 'coordinador_id', 'digitador_id');
+    }
 }

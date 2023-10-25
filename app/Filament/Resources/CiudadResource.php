@@ -78,14 +78,14 @@ class CiudadResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -93,5 +93,5 @@ class CiudadResource extends Resource
             'create' => Pages\CreateCiudad::route('/create'),
             'edit' => Pages\EditCiudad::route('/{record}/edit'),
         ];
-    }    
+    }
 }

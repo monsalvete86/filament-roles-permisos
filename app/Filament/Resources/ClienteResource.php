@@ -480,7 +480,6 @@ class ClienteResource extends Resource
                                     ->columns(4)
                                 );
                             }
-
                             return $auxSchema;
                         }
                     )

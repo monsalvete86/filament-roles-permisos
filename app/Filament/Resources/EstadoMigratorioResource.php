@@ -20,7 +20,7 @@ class EstadoMigratorioResource extends Resource
     protected static ?string $model = EstadoMigratorio::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-globe-americas';
-    
+
     protected static ?string $navigationGroup = 'Configuración del Sistema';
 
     protected static ?int $navigationSort = 1;
@@ -68,14 +68,14 @@ class EstadoMigratorioResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -83,5 +83,5 @@ class EstadoMigratorioResource extends Resource
             'create' => Pages\CreateEstadoMigratorio::route('/create'),
             'edit' => Pages\EditEstadoMigratorio::route('/{record}/edit'),
         ];
-    }    
+    }
 }
