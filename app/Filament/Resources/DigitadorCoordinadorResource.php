@@ -7,19 +7,19 @@ use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Illuminate\Support\Collection;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Collection;
 use App\Models\DigitadorCoordinador;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DigitadorCoordinadorResource\Pages;
 use App\Filament\Resources\DigitadorCoordinadorResource\RelationManagers;
-use Filament\Resources\Forms\Components\BelongsToSelect;
 
 class DigitadorCoordinadorResource extends Resource
 {
@@ -36,12 +36,12 @@ class DigitadorCoordinadorResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                        BelongsToSelect::make('digitador_id')
-                            ->relationship('digitador', 'nombre')
+                        Select::make('digitador_id')
+                            ->relationship('digitador', 'name')
                             ->label('Digitador')
                             ->required(),
-                        BelongsToSelect::make('coordinador_id')
-                            ->relationship('coordinador', 'nombre')
+                            Select::make('coordinador_id')
+                            ->relationship('coordinador', 'name')
                             ->label('Coordinador')
                             ->required(),
                     ])->columns(2)
@@ -54,14 +54,12 @@ class DigitadorCoordinadorResource extends Resource
         return $table
             ->query(
                 User::query()->whereHas('roles', function ($query) {
-                    $query->where('nombre', 'coordinador');
+                    $query->where('name', 'coordinador');
                 })
             )
-            ->listeners([
-                'click' => 'openAssignDigitadoresForm',
-            ])
             ->columns([
-                TextColumn::make('nombre')->label('Nombre'),
+                TextColumn::make('name')
+                    ->label('Nombre'),
             ])
             ->filters([
                 //
@@ -69,6 +67,7 @@ class DigitadorCoordinadorResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            
             ->bulkActions([
                 //
             ])
@@ -90,7 +89,7 @@ class DigitadorCoordinadorResource extends Resource
             'index' => Pages\ListDigitadorCoordinadors::route('/'),
             'create' => Pages\CreateDigitadorCoordinador::route('/create'),
             'edit' => Pages\EditDigitadorCoordinador::route('/{record}/edit'),
-            'assign' => Pages\AssignDigitadorCoordinador::route('/{record}/assign'),
+            'assign' => Pages\AssignDigitadoresPage::route('/assign/{coordinador}'),
         ];
     }
 }
