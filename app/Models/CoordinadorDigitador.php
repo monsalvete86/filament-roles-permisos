@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
-class DigitadorCoordinador extends Model
+class CoordinadorDigitador extends Model
 {
     use HasFactory;
 
@@ -17,14 +17,13 @@ class DigitadorCoordinador extends Model
         'digitador_id',
     ];
 
-    public function coordinador(): BelongsTo
+    public function coordinador()
     {
         return $this->belongsTo(User::class, 'coordinador_id');
     }
 
-    public function digitador(): BelongsTo
+    public function digitador()
     {
         return $this->belongsTo(User::class, 'digitador_id');
     }
-
 }

@@ -5,11 +5,17 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Collection;
+use App\Models\DigitadorCoordinador;
 use Illuminate\Support\Facades\Hash;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -27,6 +33,7 @@ class UserResource extends Resource
 
 	public static function form(Form $form): Form
 	{
+		$edit = isset($form->model->exists) ;
 		return $form
 			->schema([
 				Section::make()
@@ -35,10 +42,17 @@ class UserResource extends Resource
 							->label('Nombre')
 							->required()
 							->maxLength(255),
-						Forms\Components\TextInput::make('email')
-							->email()
-							->required()
-							->maxLength(255),
+						$edit
+							? Forms\Components\TextInput::make('email')
+								->email()
+								->required()
+								->maxLength(255)
+								->disabled(true)
+							: Forms\Components\TextInput::make('email')
+								->email()
+								->required()
+								->unique('users', 'email')
+								->maxLength(255),
 						Forms\Components\TextInput::make('password')
 							->password()
 							->dehydrateStateUsing(fn ($state) => Hash::make($state))

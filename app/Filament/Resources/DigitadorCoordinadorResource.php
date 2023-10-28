@@ -6,14 +6,11 @@ use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Illuminate\Support\Collection;
 use App\Models\DigitadorCoordinador;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,32 +22,30 @@ class DigitadorCoordinadorResource extends Resource
 {
     protected static ?string $model = DigitadorCoordinador::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    public static function canCreate(): bool
+    {
+        return false;
+    }
 
-    protected static ?string $navigationLabel = 'Digitadores Coordinadores';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
+
+	protected static ?string $navigationLabel = 'Digitadores Coordinadores';
 
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
                 Section::make()
                     ->schema([
-                        Select::make('digitador_id')
-                            ->relationship('digitador', 'name')
-                            ->label('Digitador')
-                            ->required(),
-                            Select::make('coordinador_id')
-                            ->relationship('coordinador', 'name')
-                            ->label('Coordinador')
-                            ->required(),
+                        //
                     ])->columns(2)
             ]);
     }
 
-
     public static function table(Table $table): Table
     {
+        $resultUsers = User::query();
+        // dump($resultUsers);
         return $table
             ->query(
                 User::query()->whereHas('roles', function ($query) {
@@ -58,8 +53,26 @@ class DigitadorCoordinadorResource extends Resource
                 })
             )
             ->columns([
-                TextColumn::make('name')
-                    ->label('Nombre'),
+                TextColumn::make('name'),
+
+                TextColumn::make('coordinados.name')
+                    ->listWithLineBreaks()
+                    ->badge()
+                    ->color('gray')
+                    ->searchable(),
+            ])
+            ->filters([
+                // ...
+            ])
+            ->actions([
+                // ...
+            ])
+            ->bulkActions([
+                // ...
+            ]);
+        return $table
+            ->columns([
+                //
             ])
             ->filters([
                 //
@@ -67,7 +80,6 @@ class DigitadorCoordinadorResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            
             ->bulkActions([
                 //
             ])
@@ -89,7 +101,6 @@ class DigitadorCoordinadorResource extends Resource
             'index' => Pages\ListDigitadorCoordinadors::route('/'),
             'create' => Pages\CreateDigitadorCoordinador::route('/create'),
             'edit' => Pages\EditDigitadorCoordinador::route('/{record}/edit'),
-            'assign' => Pages\AssignDigitadoresPage::route('/assign/{coordinador}'),
         ];
     }
 }
