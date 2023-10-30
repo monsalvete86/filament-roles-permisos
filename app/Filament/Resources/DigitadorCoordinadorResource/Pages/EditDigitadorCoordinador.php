@@ -11,7 +11,14 @@ use App\Filament\Resources\DigitadorCoordinadorResource;
 class EditDigitadorCoordinador extends EditRecord
 {
     // protected static string $resource = DigitadorCoordinadorResource::class;
-    protected static string $resource = CoordinadorResource::class;
+    protected static string $resource = DigitadorCoordinadorResource::class;
+
+    /* protected function mutateFormDataBeforeSave(array $data): array
+    {
+        dump($data);
+        exit; die;
+        return $data;
+    } */
 
     protected function getHeaderActions(): array
     {

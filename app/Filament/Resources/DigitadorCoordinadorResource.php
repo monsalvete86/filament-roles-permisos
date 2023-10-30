@@ -9,9 +9,12 @@ use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\DB;
 use App\Models\DigitadorCoordinador;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\SelectColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,12 +23,14 @@ use App\Filament\Resources\DigitadorCoordinadorResource\RelationManagers;
 
 class DigitadorCoordinadorResource extends Resource
 {
-    protected static ?string $model = DigitadorCoordinador::class;
+    protected static ?string $model = User::class;
 
     public static function canCreate(): bool
     {
         return false;
     }
+
+    protected static ?string $navigationGroup = 'Configuración del Sistema';
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
 
@@ -33,12 +38,45 @@ class DigitadorCoordinadorResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $edit = isset($form->model->exists) ;
+        $auxModel = $form->model;
+        // dump($auxModel->coordinados[0]->name);
+		$auxEdit = $edit ? $form->model->id : '';
+		$auxDigitadores = $edit ? DigitadorCoordinador::where('coordinador_id', $auxEdit)->pluck('digitador_id') : [];
+		$cont = 0;
+		foreach($auxDigitadores as $dig) {
+			$aux2[$cont] = $dig;
+			$cont++;
+		}
+		$digitadoresLista = User::query()
+			->whereHas('roles', function ($query) {
+				$query->where('name', 'digitador');
+			})
+			->pluck('name', 'id');
         return $form
             ->schema([
                 Section::make()
-                    ->schema([
-                        //
-                    ])->columns(2)
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Nombre del Coordinador')
+                        ->required()
+                        ->disabled(),
+                    Select::make('coordinados')
+                        ->label('Digitadores Asignados')
+                        ->relationship(name: 'coordinados', titleAttribute: 'name')
+                        ->options(function () {
+                            // Obtener los IDs de los digitadores ya asignados
+                            $assignedDigitadorIds = DB::table('digitadores_coordinadores')->pluck('digitador_id');
+                            // Obtener los digitadores que no están asignados
+                            return User::whereHas('roles', function ($query) {
+                                $query->where('name', 'digitador');
+                            })
+                            ->whereNotIn('id', $assignedDigitadorIds)
+                            ->pluck('name', 'id')
+                            ->toArray();
+                        })
+                        ->multiple(),
+                ])->columns(2)
             ]);
     }
 
