@@ -80,6 +80,7 @@ return new class extends Migration
             $table->text('nota_digitadora')->nullable();
             $table->string('audio')->nullable();
             $table->foreignId('crm_id')->constrained('clientes')->cascadeOnDelete();
+            $table->integer('codigo')->nullable();
             $table->foreignId('member_id')->constrained('clientes')->cascadeOnDelete();
             $table->timestamps();
         });

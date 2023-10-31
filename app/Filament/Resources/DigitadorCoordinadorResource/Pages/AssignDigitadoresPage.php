@@ -27,13 +27,13 @@ class AssignDigitadoresPage extends Page
         return $form
             ->schema([
                 Select::make('digitadores')
-                        ->label('Selecciona los digitadores')
-                        ->options(
-                            User::whereHas('roles', function ($query) {
-                                $query->where('name', 'digitador');
-                            })->pluck('id', 'name')->toArray()
-                        )
-                        ->stacked()
+                    ->label('Selecciona los digitadores')
+                    ->options(
+                        User::whereHas('roles', function ($query) {
+                            $query->where('name', 'digitador');
+                        })->pluck('id', 'name')->toArray()
+                    )
+                    ->stacked()
             ])
             ->submit('Guardar')
             ->redirectAfterSubmit('/admin/digitadores-coordinador');

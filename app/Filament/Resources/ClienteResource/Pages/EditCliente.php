@@ -20,6 +20,7 @@ class EditCliente extends EditRecord
             }
         }
         return $data;
+
     }
 
     protected function getHeaderActions(): array

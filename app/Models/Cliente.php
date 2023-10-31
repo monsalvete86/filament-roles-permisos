@@ -79,8 +79,8 @@ class Cliente extends Model
         'user_id',
         'audio',
         'crm_id',
+        'codigo',
         'member_id',
-    
     ];
 
     public function estado(): BelongsTo

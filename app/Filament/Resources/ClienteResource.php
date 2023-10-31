@@ -46,7 +46,7 @@ class ClienteResource extends Resource
     {
         $edit = isset($form->model->exists) ;
 
-        $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin']);
+        $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin', 'coordinador']);
 
         $disabled = auth()->user()->hasRole(['digitador']) && $edit ? true : false;
 
@@ -289,7 +289,7 @@ class ClienteResource extends Resource
                         function (Get $get) use ($form) {
 
                             $edit = isset($form->model->exists) ;
-                            $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin']);
+                            $disabled = ! auth()->user()->hasRole(['digitador', 'procesador', 'admin', 'coordinador']);
                             $disabled = auth()->user()->hasRole(['digitador']) && $edit ? true : false;
                             $auxSchema = [];
 
@@ -347,11 +347,6 @@ class ClienteResource extends Resource
                                         ->preload()
                                         ->live()
                                         ->required(),
-                                    /*TextInput::make('plan_compania_aseguradora')
-                                        ->placeholder('Plan seleccionado por el cliente')
-                                        ->hidden(! auth()->user()->hasRole(['digitador', 'admin' , 'procesador']))
-                                        ->disabled($disabled)
-                                        ->required(),*/
                                     TextInput::make('prima_mensual')
                                         ->label('Prima mensual')
                                         ->placeholder('Prima mensual')
@@ -546,6 +541,27 @@ class ClienteResource extends Resource
             );
         }
 
+        array_push($schemas, Section::make('Coordinador')
+            ->schema([
+                TextInput::make('codigo')
+                    ->label('Codigo')
+                    ->hidden(! auth()->user()->hasRole(['coordinador', 'admin' , 'procesador']))
+                    ->disabled(! auth()->user()->hasRole(['coordinador', 'admin'])),
+                TextInput::make('member_id')
+                    ->label('Member')
+                    ->hidden(! auth()->user()->hasRole(['benefit', 'admin' , 'procesador', 'coordinador']))
+                    ->disabled(! auth()->user()->hasRole(['coordinador', 'admin'])),
+                Radio::make('marcador')
+                    ->hidden(! auth()->user()->hasRole(['benefit', 'admin' , 'procesador', 'coordinador']))
+                    ->disabled($disabled)
+                    ->required()
+                    ->boolean()
+                    ->columns(2),
+            ])
+            ->collapsible()
+            ->columns(3)
+        );
+
         array_push($schemas, Section::make('Datos Adicionales')
             ->schema([
                 TextInput::make('audio')
@@ -556,7 +572,7 @@ class ClienteResource extends Resource
                     ->suffixIcon('heroicon-m-globe-alt'),
                 TextInput::make('image')
                     ->label('Imagen')
-                    ->hidden(! auth()->user()->hasRole(['benefit', 'admin' , 'procesador']))
+                    ->hidden(! auth()->user()->hasRole(['benefit', 'admin' , 'procesador', 'coordinador']))
                     ->url()
                     ->suffixIcon('heroicon-m-globe-alt'),
                 Textarea::make('nota_benefit')
@@ -754,7 +770,7 @@ class ClienteResource extends Resource
                     ->hidden(! auth()->user()->hasRole(['benefit', 'admin']))
                     ->searchable(),
                 TextColumn::make('imagen')
-                    ->hidden(! auth()->user()->hasRole(['benefit', 'admin']))
+                    ->hidden(! auth()->user()->hasRole(['benefit', 'admin', 'coordinador']))
                     ->searchable(),
                 TextColumn::make('nota_benefit')
                     ->hidden(! auth()->user()->hasRole(['benefit', 'admin']))
@@ -807,13 +823,17 @@ class ClienteResource extends Resource
                 TextInputColumn::make('crm_id')
                     ->hidden(! auth()->user()->hasRole(['admin', 'coordinador', 'procesador']))
                     ->disabled(! auth()->user()->hasRole(['admin', 'coordinador'])),
+                TextInputColumn::make('codigo')
+                    ->hidden(! auth()->user()->hasRole(['admin', 'procesador', 'coordinador']))
+                    ->disabled(! auth()->user()->hasRole(['admin'])),
                 TextInputColumn::make('member_id')
-                    ->hidden(! auth()->user()->hasRole(['admin', 'coordinador', 'procesador']))
-                    ->disabled(! auth()->user()->hasRole(['admin', 'coordinador'])),
-                /* TextColumn::make('admin.name')
-                    ->hidden(! auth()->user()->hasRole(['admin']))
-                    ->searchable(), */
-
+                    ->hidden(! auth()->user()->hasRole(['admin', 'procesador', 'coordinador']))
+                    ->disabled(! auth()->user()->hasRole(['admin'])),
+                TextColumn::make('marcador')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (string $state): string => $state ? 'success' : 'danger')
+                    ->formatStateUsing(fn (string $state): string => $state ? 'Retirado' : 'Rechazado'),
             ])
             ->striped()
             ->defaultSort('created_at', 'desc')
@@ -826,9 +846,7 @@ class ClienteResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                /* Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),*/
+                //
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()
@@ -838,7 +856,7 @@ class ClienteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // RelationManagers\DependientesRelationManager::class,
+            //
         ];
     }
 
