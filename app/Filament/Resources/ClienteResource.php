@@ -18,6 +18,7 @@ use App\Models\PlanesCompania;
 use App\Models\EstadoMigratorio;
 use Filament\Resources\Resource;
 use Illuminate\Support\Collection;
+use App\Models\DigitadorCoordinador;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -617,6 +618,15 @@ class ClienteResource extends Resource
         if (auth()->user()->hasRole(['digitador'])) {
             return $query->where('digitador_id', '=', auth()->user()->id);
         }
+
+        if (auth()->user()->hasRole(['coordinador'])) {
+            $idDigitadores = DigitadorCoordinador::where('coordinador_id', auth()->user()->id)->pluck('digitador_id');
+            // $digitadoresArray = explode(",", $digitadoresString);
+            // dump($digitadoresString);
+            // return $query->where('digitador_id', 'in', $idDigitadores);
+            return $query->whereIn('digitador_id', $idDigitadores);
+        }
+
 
         return $query->where('id', '>', '0');
     }
